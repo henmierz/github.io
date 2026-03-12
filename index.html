@@ -1,0 +1,642 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Mierzwa — Portfolio</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<meta name="theme-color" content="#0047FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1A6EFF;
+    --blue-light: #4B91FF;
+    --blue-dark: #0A4FCC;
+    --black: #0E0E0E;
+    --dark: #1C1C1C;
+    --gray: #6B6B6B;
+    --light-gray: #F0F0EE;
+    --white: #FAFAFA;
+    --border: #E2E2E0;
+    --gradient: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 25%, var(--blue) 75%, var(--blue-light) 100%);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: rgba(250,250,250,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); }
+  .nav-name {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
+    letter-spacing: -0.01em; color: var(--black); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 14px;
+    letter-spacing: 0.02em; color: var(--gray); text-decoration: none;
+    transition: color 0.2s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 1.5px; background: var(--blue); transition: width 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-links a.active { color: var(--black); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh; display: grid; grid-template-columns: 1fr 1fr;
+    align-items: center; padding: 0 60px; padding-top: 90px; gap: 40px; padding-bottom: 90px;
+    margin: 0 auto; padding-left: 250px; padding-right: 250px;
+  }
+  .hero-left { animation: fadeUp 0.8s ease both; }
+  .hero-eyebrow {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 12px;
+    letter-spacing: 0.15em; color: var(--gray); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .hero-headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 4.5vw, 20px); line-height: 1.15;
+    letter-spacing: -0.03em; color: var(--black); margin-bottom: 24px;
+  }
+  .hero-headline .accent { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .hero-body { font-size: 16px; line-height: 1.75; color: var(--gray); max-width: 440px; margin-bottom: 36px; }
+  .hero-tags { display: flex; gap: 10px; flex-wrap: wrap; margin-bottom: 44px; }
+  .tag {
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 6px 14px; border-radius: 100px;
+    background: #EEF3FF; color: var(--blue); border: 1px solid #C4D8FF;
+  }
+  .hero-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: var(--black); text-decoration: none;
+    border-bottom: 2px solid var(--black); padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .hero-cta:hover { color: var(--blue); border-color: var(--blue); }
+
+  /* Hero Illustration */
+  .hero-right { display: flex; justify-content: center; align-items: center; animation: fadeUp 0.8s 0.2s ease both; }
+  .hero-illustration {
+    width: 100%; max-width: 500px; aspect-ratio: 1; border-radius: 24px;
+    background: linear-gradient(135deg, #0A1628 0%, #0D2052 30%, #1A4FCC 60%, #1565FF 80%, #4B91FF 100%);
+    position: relative; overflow: hidden;
+    box-shadow: 0 40px 80px rgba(26, 110, 255, 0.2), 0 0 0 1px rgba(26,110,255,0.1);
+  }
+  .illu-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .illu-glow {
+    position: absolute; width: 260px; height: 260px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(75,145,255,0.5) 0%, transparent 70%);
+    top: 50%; left: 50%; transform: translate(-50%,-50%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  .illu-content {
+    position: absolute; inset: 0; display: flex; flex-direction: column;
+    align-items: center; justify-content: center; gap: 16px;
+  }
+  .illu-badge {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 11px;
+    letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    padding: 6px 14px; border-radius: 100px;
+  }
+  .illu-initials {
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 88px;
+    letter-spacing: -0.05em; color: white; line-height: 1;
+    text-shadow: 0 0 60px rgba(75,145,255,0.8);
+  }
+  .illu-dots { display: flex; gap: 8px; }
+  .illu-dot {
+    width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3);
+    animation: dotPulse 2s ease-in-out infinite;
+  }
+  .illu-dot:nth-child(2) { animation-delay: 0.3s; background: rgba(75,145,255,0.7); }
+  .illu-dot:nth-child(3) { animation-delay: 0.6s; }
+  .illu-corner {
+    position: absolute; font-family: 'Syne', sans-serif; font-size: 10px;
+    letter-spacing: 0.12em; color: rgba(255,255,255,0.35); text-transform: uppercase;
+  }
+  .illu-corner.tl { top: 24px; left: 28px; }
+  .illu-corner.br { bottom: 24px; right: 28px; }
+
+  /* FEATURED WORK */
+  .featured-work { padding: 100px 60px; border-top: 0px solid var(--border); margin: 0 auto;         
+    padding-left: 250px;      
+    padding-right: 250px;}
+  .section-header { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 64px; }
+  .section-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 3.5vw, 36px); letter-spacing: -0.03em; color: var(--black);
+  }
+  .section-count { font-family: 'Syne', sans-serif; font-size: 12px; color: var(--gray); letter-spacing: 0.1em; text-transform: uppercase; }
+
+  /* Case study cards */
+  .case-studies { display: flex; flex-direction: column; gap: 0; }
+  .case-card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px;
+    align-items: center; padding: 64px 0;
+    border-top: 1px solid var(--border);
+    text-decoration: none; color: inherit; cursor: pointer;
+  }
+  .case-card:last-child { border-bottom: 1px solid var(--border); }
+  .case-card:hover .case-arrow { transform: translate(4px, -4px); }
+  .case-card:hover .case-img-inner { transform: scale(1.03); }
+  .case-left { order: 1; }
+  .case-card:nth-child(even) .case-left { order: 2; }
+  .case-card:nth-child(even) .case-right { order: 1; }
+  .case-eyebrow {
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 14px;
+  }
+  .case-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(22px, 2.5vw, 34px); letter-spacing: -0.03em; line-height: 1.1;
+    color: var(--black); margin-bottom: 16px;
+  }
+  .case-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-bottom: 20px; }
+  .case-tag {
+    font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    padding: 5px 12px; border-radius: 100px;
+    background: #EEF3FF; color: var(--blue); border: 1px solid #C4D8FF;
+  }
+  .case-desc { font-size: 15px; line-height: 1.7; color: var(--gray); margin-bottom: 28px; max-width: 380px; }
+  .case-link {
+    display: inline-flex; align-items: center; gap: 6px;
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 12px;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    color: var(--black); text-decoration: none;
+    border-bottom: 1.5px solid var(--black); padding-bottom: 2px;
+    transition: color 0.2s, border-color 0.2s;
+  }
+  .case-link:hover { color: var(--blue); border-color: var(--blue); }
+  .case-arrow { display: inline-block; transition: transform 0.25s ease; }
+  .case-img-wrap {
+    border-radius: 16px; overflow: hidden; aspect-ratio: 4/3; position: relative;
+  }
+  .case-img-inner {
+    width: 100%; height: 100%; display: flex; align-items: center; justify-content: center;
+    transition: transform 0.5s ease; position: relative;
+  }
+  .case-img-bg-1 { background: linear-gradient(135deg, #0A1628 0%, #0D2052 40%, #1565FF 70%, #4B91FF 100%); }
+  .case-img-bg-2 { background: linear-gradient(135deg, #050D1F 0%, #0A2A6E 50%, #1A6EFF 100%); }
+  .case-img-bg-3 { background: linear-gradient(135deg, #0D1B33 0%, #163380 50%, #2B7FFF 100%); }
+  .case-img-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.05) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+  }
+  .case-img-label {
+    position: relative; font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: 56px; color: rgba(255,255,255,0.14); letter-spacing: -0.03em; user-select: none;
+  }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 64px 60px 48px; margin: 0 auto;         
+    padding-left: 250px;      
+    padding-right: 250px;}
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; }
+  .footer-headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.03em; margin-bottom: 24px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer-info { font-size: 14px; line-height: 2; color: #777; }
+  .footer-links { display: flex; gap: 48px; padding-top: 8px; }
+  .footer-links a {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500;
+    color: #777; text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid #2A2A2A; padding-top: 24px; font-size: 12px; color: #444; font-family: 'Syne', sans-serif; }
+
+  /* ANIMATIONS */
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+  @keyframes dotPulse {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 1; transform: scale(1.3); }
+  }
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    .hero { grid-template-columns: 1fr; padding: 100px 24px 60px; min-height: auto; }
+    .hero-right { order: -1; }
+    .hero-illustration { max-width: 300px; }
+    .featured-work { padding: 60px 24px; }
+    .case-card { grid-template-columns: 1fr; gap: 28px; padding: 40px 0; }
+    .case-card:nth-child(even) .case-left, .case-card:nth-child(even) .case-right { order: unset; }
+    footer { padding: 48px 24px 36px; }
+    .footer-top { flex-direction: column; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== CUSTOM CURSOR — paste before </body> on each page ========== -->
+<style>
+  /* Hide default cursor site-wide */
+  *, *::before, *::after { cursor: none !important; }
+
+  /* Inner dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: #0A4FCC;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+
+  /* Outer ring */
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 2px solid #0a4ecc;
+    background: rgba(43, 78, 255, 0.10);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease,
+                background 0.3s ease;
+  }
+
+  /* Hover state — grows + fills with blue */
+  .cursor-dot.is-hover {
+    width: 12px; height: 12px;
+    background: #2b4eff;          /* electric blue from your palette */
+  }
+  .cursor-ring.is-hover {
+    width: 56px; height: 56px;
+    border-color: #2b4eff;
+    background: rgba(43, 78, 255, 0.10);
+  }
+
+  /* Click state — quick squeeze */
+  .cursor-dot.is-click {
+    width: 6px; height: 6px;
+  }
+  .cursor-ring.is-click {
+    width: 30px; height: 30px;
+  }
+
+  /* Hide custom cursor on touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    *, *::before, *::after { cursor: auto !important; }
+  }
+</style>
+
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<script>
+(function () {
+  const dot  = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  if (!dot || !ring) return;
+
+  let mouseX = -100, mouseY = -100;   // current mouse position
+  let ringX  = -100, ringY  = -100;   // smoothed ring position
+  const ease = 0.15;                   // lower = more lag on the ring
+
+  /* Track mouse position */
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+  });
+
+  /* Smooth follow loop for the ring */
+  function animate() {
+    ringX += (mouseX - ringX) * ease;
+    ringY += (mouseY - ringY) * ease;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* Hover detection — add any selectors you want to trigger the grow */
+  const hoverTargets = 'a, button, [role="button"], input[type="submit"], .hoverable';
+
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(hoverTargets)) {
+      dot.classList.add('is-hover');
+      ring.classList.add('is-hover');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(hoverTargets)) {
+      dot.classList.remove('is-hover');
+      ring.classList.remove('is-hover');
+    }
+  });
+
+  /* Click pulse */
+  document.addEventListener('mousedown', () => {
+    dot.classList.add('is-click');
+    ring.classList.add('is-click');
+  });
+  document.addEventListener('mouseup', () => {
+    dot.classList.remove('is-click');
+    ring.classList.remove('is-click');
+  });
+
+  /* Hide when cursor leaves the window */
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity  = '0';
+    ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.style.opacity  = '1';
+    ring.style.opacity = '1';
+  });
+})();
+</script>
+<!-- ========== END CUSTOM CURSOR ========== -->
+
+<nav id="navbar">
+  <a href="index.html" class="nav-name">Henry Mierzwa</a>
+  <ul class="nav-links">
+    <li><a href="index.html" class="active">Work</a></li>
+    <li><a href="music.html">Music</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#" onclick="openResumeModal(event)">Resume</a></li>
+  </ul>
+</nav>
+
+<section class="hero">
+  <div class="hero-left">
+    <!--
+    <p class="hero-eyebrow">Product Marketing Manager & Producer / DJ</p>
+    -->
+    <h1 class="hero-headline">
+      Hi, I'm Henry, a <span class="accent">product marketer</span> with a passion for storytelling and creative endeavors
+    </h1>
+    <p class="hero-body">
+      Senior Product Marketing Manager at <span style="color: black;">NielsenIQ</span>
+      <br>Founder & Producer/DJ at <span style="color: black;">Galena Crew</span>
+      <br>I build products and brands that connect, in boardrooms and on dancefloors
+    </p>
+    <!-- 
+    <div class="hero-tags">
+      <span class="tag">Product Marketing</span>
+      <span class="tag">Go-To-Market</span>
+      <span class="tag">DJ & Producer</span>
+      <span class="tag">Brand Strategy</span>
+    </div>
+    -->
+    <a href="#work" class="hero-cta">See my work <span class="case-arrow">→</span></a>
+  </div>
+  <div class="hero-right">
+    <iframe 
+      src="hero-graphic.html" 
+      frameborder="0"
+      width="775" 
+      height="775"
+      style="border: none; overflow: hidden; transform: scale(0.75); position: absolute; pointer-events: none;"
+    ></iframe>
+    <!--
+    <div class="hero-illustration">
+      <div class="illu-grid"></div>
+      <div class="illu-glow"></div>
+      <div class="illu-content">
+        <span class="illu-badge">Chicago, IL</span>
+        <span class="illu-initials">HM</span>
+        <div class="illu-dots">
+          <div class="illu-dot"></div>
+          <div class="illu-dot"></div>
+          <div class="illu-dot"></div>
+        </div>
+      </div>
+      <span class="illu-corner tl">PMM</span>
+      <span class="illu-corner br">Galena Crew</span>
+    </div>
+    -->
+  </div>
+</section>
+
+<section class="featured-work" id="work">
+  <div class="section-header">
+    <h2 class="section-title">Featured Work</h2>
+    <span class="section-count">02 Projects</span>
+  </div>
+  <div class="case-studies">
+
+    <a href="#" class="case-card fade-in">
+      <div class="case-left">
+        <p class="case-eyebrow">NielsenIQ</p>
+        <h3 class="case-title">Redefining the GTM strategy for an AI assistant</h3>
+        <div class="case-tags">
+          <span class="case-tag">GTM Strategy</span>
+          <span class="case-tag">Product Marketing</span>
+          <span class="case-tag">Storytelling</span>
+        </div>
+        <p class="case-desc">Led the repositioning of Ask Arthur, NIQ’s AI assistant, by helping conduct client interviews and competitive analysis to identify capability gaps, inform the product roadmap, and shape the overall go-to-market strategy, leading to a measurable uptick in client usage.</p>
+        <span class="case-link">Full case study coming soon!</span>
+      </div>
+      <div class="case-right">
+        <div class="case-img-wrap">
+          <div class="case-img-inner case-img-bg-1">
+            <div class="case-img-grid" style="display: flex; justify-content: right;">
+              <img src="images/NIQ Banner.jpeg" draggable="false" style="height: 100%;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+    <a href="galenacrew-rebrand.html" class="case-card fade-in">
+      <div class="case-left">
+        <p class="case-eyebrow">Galena Crew</p>
+        <h3 class="case-title">Building a brand identity from scratch</h3>
+        <div class="case-tags">
+          <span class="case-tag">Brand Strategy</span>
+          <span class="case-tag">Social Media Management</span>
+          <span class="case-tag">Positioning</span>
+          <span class="case-tag">Market Research</span>
+        </div>
+        <p class="case-desc">Designed and facilitated a branding workshop for Galena Crew, turning three months of research into an identity system, content strategy, and visual framework that drove a 214% increase in daily streams and contributed to a North Coast Music Festival mainstage booking.</p>
+        <span class="case-link">View Project <span class="case-arrow">→</span></span>
+      </div>
+      <div class="case-right">
+        <div class="case-img-wrap">
+          <div class="case-img-inner case-img-bg-2">
+            <div class="case-img-grid" style="display: flex; justify-content: center;">
+              <img src="images/Galena Crew 1.jpg" draggable="false" style="height: 100%;">
+            </div>
+          </div>
+        </div>
+      </div>
+    </a>
+
+  </div>
+</section>
+
+<footer>
+  <p class="footer-headline">Thanks for stopping by</p>
+  <div class="footer-top">
+    <div>
+      <div class="footer-info">
+        <p>byhenrym@gmail.com</p>
+        <p>Designed, vibed, and coded by yours truly</p>
+        <p>© 2026 Henry Mierzwa</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:byhenrym@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/henmierz" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== RESUME MODAL — copy this entire block to any page ========== -->
+<style>
+  .resume-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(14, 14, 14, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .resume-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .resume-modal {
+    position: relative;
+    background: var(--white, #FAFAFA);
+    border: 1px solid var(--blue, #1A6EFF);
+    border-radius: 16px;
+    padding: 48px 44px 40px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(26, 110, 255, 0.25), 0 0 60px rgba(26, 110, 255, 0.08);
+    transform: scale(0.92) translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.35s ease;
+  }
+  .resume-overlay.is-open .resume-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  .resume-modal-close {
+    position: absolute; top: 16px; right: 18px;
+    background: none; border: none;
+    font-size: 22px; line-height: 1;
+    color: var(--gray, #6B6B6B);
+    cursor: pointer; transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .resume-modal-close:hover { color: var(--black, #0E0E0E); }
+  .resume-modal h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--black, #0E0E0E);
+    margin-bottom: 14px;
+  }
+  .resume-modal p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gray, #6B6B6B);
+    margin-bottom: 32px;
+  }
+  .resume-modal-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: white; background: var(--blue, #1A6EFF);
+    border: none; border-radius: 100px;
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .resume-modal-btn:hover {
+    background: var(--blue-dark, #0A4FCC);
+    box-shadow: 0 4px 20px rgba(26, 110, 255, 0.35);
+  }
+</style>
+
+<div class="resume-overlay" id="resumeOverlay">
+  <div class="resume-modal">
+    <button class="resume-modal-close" onclick="closeResumeModal()" aria-label="Close">&times;</button>
+    <h2>Resume</h2>
+    <p>To respect confidentiality, my resume is shared on a personal basis. Feel free to reach out and I'll be happy to send it your way!</p>
+    <a class="resume-modal-btn" href="mailto:byhenrym@gmail.com?subject=Resume%20Inquiry">Contact Me &rarr;</a>
+  </div>
+</div>
+
+<script>
+  function openResumeModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('resumeOverlay').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeResumeModal() {
+    document.getElementById('resumeOverlay').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('resumeOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeResumeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeResumeModal();
+  });
+</script>
+<!-- ========== END RESUME MODAL ========== -->
+
+<script>
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) { e.target.style.transitionDelay = (i * 0.12) + 's'; e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

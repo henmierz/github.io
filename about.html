@@ -1,0 +1,932 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Mierzwa — About</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<meta name="theme-color" content="#0047FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;1,351&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1A6EFF;
+    --blue-light: #4B91FF;
+    --blue-dark: #0A4FCC;
+    --black: #0E0E0E;
+    --dark: #1C1C1C;
+    --gray: #6B6B6B;
+    --light-gray: #F0F0EE;
+    --white: #FAFAFA;
+    --border: #E2E2E0;
+    --gradient: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 25%, var(--blue) 75%, var(--blue-light) 100%);
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: rgba(250,250,250,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); }
+  .nav-name {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px;
+    letter-spacing: -0.01em; color: var(--black); text-decoration: none;
+  }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 14px;
+    letter-spacing: 0.02em; color: var(--gray); text-decoration: none;
+    transition: color 0.2s; position: relative;
+  }
+  .nav-links a::after {
+    content: ''; position: absolute; bottom: -2px; left: 0;
+    width: 0; height: 1.5px; background: var(--blue); transition: width 0.25s ease;
+  }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-links a.active { color: var(--black); }
+
+  /* ABOUT HERO */
+  .about-hero {
+    display: grid; grid-template-columns: 1fr 1fr;
+    gap: 80px; align-items: center;
+    padding: 140px 60px 80px;
+    margin: 0 auto; padding-left: 250px; padding-right: 250px;
+    margin-bottom: 100px;
+  }
+  .about-hero-text { animation: fadeUp 0.8s ease both; }
+
+  .about-intro-label {
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 500;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 20px;
+  }
+
+  .about-intro-heading {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 4.5vw, 20px); line-height: 1.15;
+    letter-spacing: -0.03em; color: var(--black); margin-bottom: 24px;
+  }
+  .about-intro-heading span { background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+
+  .about-intro-body {
+    font-size: 16px; line-height: 1.85; color: #444; margin-bottom: 36px;
+  }
+
+  .about-cta-row { display: flex; gap: 16px; flex-wrap: wrap; }
+  .about-cta {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 10px 22px; border-radius: 100px; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .about-cta.primary { background: var(--blue); color: white; }
+  .about-cta.primary:hover { background: var(--blue-light); }
+  .about-cta.secondary { border: 1.5px solid var(--border); color: var(--gray); }
+  .about-cta.secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* Portrait placeholder */
+  .about-portrait-wrap { animation: fadeUp 0.8s 0.2s ease both; display: flex; justify-content: center; }
+  .about-portrait {
+    width: 400px; height: 500px; border-radius: 24px;
+    background: linear-gradient(160deg, #0A1628 0%, #0D2052 40%, #1A4FCC 70%, #3B7FFF 100%);
+    position: relative; overflow: hidden;
+    box-shadow: 0 32px 64px rgba(26,110,255,0.18), 0 0 0 1px rgba(26,110,255,0.1);
+  }
+  .about-portrait-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  .about-portrait-glow {
+    position: absolute; width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(75,145,255,0.4) 0%, transparent 70%);
+    top: 30%; left: 50%; transform: translate(-50%, -50%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+  .about-portrait-initials {
+    position: absolute; bottom: 32px; left: 32px;
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 64px;
+    letter-spacing: -0.05em; color: rgba(255,255,255,0.15); user-select: none; line-height: 1;
+  }
+  .about-portrait-badge {
+    position: absolute; top: 24px; right: 24px;
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.08); border: 1px solid rgba(255,255,255,0.12);
+    padding: 5px 12px; border-radius: 100px;
+  }
+  .about-portrait-name {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);
+    font-family: 'Syne', sans-serif; font-weight: 800; font-size: 48px;
+    color: white; letter-spacing: -0.04em; text-shadow: 0 0 40px rgba(75,145,255,0.8);
+    text-align: center; line-height: 1.1;
+  }
+
+  /* CONTENT */
+  .about-content { padding: 0 60px 100px; margin: 0 auto; padding-left: 250px; padding-right: 250px;}
+
+  .about-section { margin-bottom: 100px; }
+
+  .section-label {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .about-section-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(24px, 3vw, 36px); letter-spacing: -0.025em;
+    color: var(--black); margin-bottom: 40px; line-height: 1.2;
+  }
+
+  /* Experience items */
+  .exp-list { display: flex; flex-direction: column; gap: 40px; }
+  .exp-item { display: grid; grid-template-columns: 200px 1fr; gap: 40px; }
+  .exp-meta { flex-shrink: 0; }
+  .exp-company { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 13px; color: var(--black); margin-bottom: 4px; }
+  .exp-dates { font-size: 12px; color: var(--gray); }
+  .exp-role { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px; color: var(--black); margin-bottom: 10px; }
+  .exp-desc { font-size: 15px; line-height: 1.75; color: #555; }
+
+  /* Interests grid */
+  .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; }
+  .interest-card {
+    border: 1px solid var(--border); border-radius: 14px; padding: 24px;
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .interest-card:hover { border-color: #C4D8FF; box-shadow: 0 4px 20px rgba(26,110,255,0.07); }
+  .interest-icon { font-size: 24px; margin-bottom: 12px; }
+  .interest-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--black); margin-bottom: 8px; }
+  .interest-desc { font-size: 13px; line-height: 1.65; color: var(--gray); }
+
+  /* Connect */
+  .connect-section {
+    background: var(--black); border-radius: 24px; padding: 64px 60px;
+    display: flex; justify-content: space-between; align-items: center; gap: 40px;
+    margin-bottom: 80px;
+  }
+  .connect-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(28px, 3.5vw, 44px); letter-spacing: -0.03em;
+    color: white; margin-bottom: 12px;
+  }
+  .connect-title span { color: var(--blue); }
+  .connect-subtitle { font-size: 15px; color: #888; }
+  .connect-links { display: flex; gap: 16px; flex-wrap: wrap; flex-shrink: 0; }
+  .connect-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase;
+    padding: 12px 24px; border-radius: 100px; text-decoration: none;
+    transition: all 0.2s;
+  }
+  .connect-link.primary { background: var(--blue); color: white; }
+  .connect-link.primary:hover { background: var(--blue-light); }
+  .connect-link.outline { border: 1.5px solid #333; color: #888; }
+  .connect-link.outline:hover { border-color: var(--blue); color: var(--blue); }
+
+
+  .gallery-section {
+    padding: 0 0 100px;
+    margin: 0 auto;
+  }
+  .gallery-header {
+    padding: 0 60px;
+    padding-left: 250px;
+    padding-right: 250px;
+  }
+
+  /* Carousel */
+  .gallery-carousel {
+    position: relative;
+    height: 425px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none;
+    overflow: hidden;
+  }
+  .gallery-slide {
+    position: absolute;
+    width: 320px;
+    height: 320px;
+    border-radius: 18px;
+    overflow: hidden;
+    background: var(--light-gray);
+    transition: all 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+    will-change: transform, opacity;
+  }
+  .gallery-slide img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    pointer-events: none;
+  }
+  /* Placeholder when no image */
+  .gallery-slide-placeholder {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(160deg, #0A1628 0%, #0D2052 40%, #1A4FCC 70%, #3B7FFF 100%);
+    color: rgba(255,255,255,0.25);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.1em;
+  }
+
+  /* Position states — 3 spotlighted, 1 peeking each side */
+  .gallery-slide[data-pos="-3"] {
+    transform: translateX(-820px) scale(0.88);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .gallery-slide[data-pos="-2"] {
+    transform: translateX(-580px) scale(0.88);
+    opacity: 0.45;
+    z-index: 1;
+    filter: blur(1.5px);
+  }
+  .gallery-slide[data-pos="-1"] {
+    transform: translateX(-340px) scale(1);
+    opacity: 1;
+    z-index: 3;
+    filter: blur(0);
+  }
+  .gallery-slide[data-pos="0"] {
+    transform: translateX(0) scale(1);
+    opacity: 1;
+    z-index: 4;
+    filter: blur(0);
+    box-shadow: 0 20px 50px rgba(10, 79, 204, 0.10), 0 0 0 1px rgba(26, 110, 255, 0.06);
+  }
+  .gallery-slide[data-pos="1"] {
+    transform: translateX(340px) scale(1);
+    opacity: 1;
+    z-index: 3;
+    filter: blur(0);
+  }
+  .gallery-slide[data-pos="2"] {
+    transform: translateX(580px) scale(0.88);
+    opacity: 0.45;
+    z-index: 1;
+    filter: blur(1.5px);
+  }
+  .gallery-slide[data-pos="3"] {
+    transform: translateX(820px) scale(0.88);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .gallery-slide[data-pos="hidden"] {
+    transform: translateX(0) scale(0.5);
+    opacity: 0;
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* Arrow buttons */
+  .gallery-arrows {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    right: 0;
+    display: flex;
+    justify-content: space-between;
+    padding: 0 24px;
+    transform: translateY(-50%);
+    pointer-events: none;
+    z-index: 10;
+  }
+  .gallery-arr {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: rgba(250, 250, 250, 0.92);
+    backdrop-filter: blur(8px);
+    border: 1px solid var(--border);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: auto;
+    cursor: pointer;
+    transition: border-color 0.25s, transform 0.15s, box-shadow 0.25s;
+  }
+  .gallery-arr:hover {
+    border-color: var(--blue);
+    box-shadow: 0 4px 16px rgba(26, 110, 255, 0.15);
+  }
+  .gallery-arr:active {
+    transform: scale(0.92);
+  }
+  .gallery-arr svg {
+    width: 16px;
+    height: 16px;
+    stroke: var(--gray);
+    fill: none;
+    stroke-width: 2;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    transition: stroke 0.25s;
+  }
+  .gallery-arr:hover svg {
+    stroke: var(--blue);
+  }
+
+  /* Counter */
+  .gallery-counter {
+    font-family: 'Syne', sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.08em;
+    color: var(--gray);
+    text-align: center;
+    margin-top: 12px;
+  }
+  .gallery-counter span {
+    color: var(--black);
+    font-weight: 700;
+  }
+
+  /* Mobile */
+  @media (max-width: 960px) {
+    .gallery-header {
+      padding: 0 24px;
+    }
+    .gallery-slide {
+      width: 150px;
+      height: 150px;
+      border-radius: 14px;
+    }
+    .gallery-carousel {
+      height: 240px;
+    }
+    .gallery-slide[data-pos="-2"] { transform: translateX(-340px) scale(0.88); }
+    .gallery-slide[data-pos="-1"] { transform: translateX(-212px) scale(1); }
+    .gallery-slide[data-pos="1"]  { transform: translateX(212px) scale(1); }
+    .gallery-slide[data-pos="2"]  { transform: translateX(340px) scale(0.88); }
+    .gallery-arrows { padding: 0 8px; }
+    .gallery-arr { width: 34px; height: 34px; }
+  }
+
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 64px 60px 48px; margin: 0 auto;         
+    padding-left: 250px;      
+    padding-right: 250px;}
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; }
+  .footer-headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800;
+    font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.03em; margin-bottom: 24px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer-info { font-size: 14px; line-height: 2; color: #777; }
+  .footer-links { display: flex; gap: 48px; padding-top: 8px; }
+  .footer-links a {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500;
+    color: #777; text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid #2A2A2A; padding-top: 24px; font-size: 12px; color: #444; font-family: 'Syne', sans-serif; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  @keyframes pulse {
+    0%, 100% { transform: translate(-50%,-50%) scale(1); opacity: 0.7; }
+    50% { transform: translate(-50%,-50%) scale(1.15); opacity: 1; }
+  }
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 960px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 20px; }
+    .about-hero { grid-template-columns: 1fr; padding: 120px 24px 60px; gap: 48px; }
+    .about-portrait-wrap { order: -1; }
+    .about-portrait { width: 260px; height: 320px; }
+    .about-content { padding: 0 24px 60px; }
+    .exp-item { grid-template-columns: 1fr; gap: 8px; }
+    .interests-grid { grid-template-columns: 1fr 1fr; }
+    .connect-section { flex-direction: column; padding: 40px 28px; }
+    footer { padding: 48px 24px 36px; }
+    .footer-top { flex-direction: column; gap: 32px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== CUSTOM CURSOR — paste before </body> on each page ========== -->
+<style>
+  /* Hide default cursor site-wide */
+  *, *::before, *::after { cursor: none !important; }
+
+  /* Inner dot */
+  .cursor-dot {
+    position: fixed;
+    top: 0; left: 0;
+    width: 8px; height: 8px;
+    background: #0A4FCC;
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99999;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+
+  /* Outer ring */
+  .cursor-ring {
+    position: fixed;
+    top: 0; left: 0;
+    width: 36px; height: 36px;
+    border: 2px solid #0a4ecc;
+    background: rgba(43, 78, 255, 0.10);
+    border-radius: 50%;
+    pointer-events: none;
+    z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease,
+                background 0.3s ease;
+  }
+
+  /* Hover state — grows + fills with blue */
+  .cursor-dot.is-hover {
+    width: 12px; height: 12px;
+    background: #2b4eff;          /* electric blue from your palette */
+  }
+  .cursor-ring.is-hover {
+    width: 56px; height: 56px;
+    border-color: #2b4eff;
+    background: rgba(43, 78, 255, 0.10);
+  }
+
+  /* Click state — quick squeeze */
+  .cursor-dot.is-click {
+    width: 6px; height: 6px;
+  }
+  .cursor-ring.is-click {
+    width: 30px; height: 30px;
+  }
+
+  /* Hide custom cursor on touch devices */
+  @media (hover: none) and (pointer: coarse) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    *, *::before, *::after { cursor: auto !important; }
+  }
+</style>
+
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+
+<script>
+(function () {
+  const dot  = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  if (!dot || !ring) return;
+
+  let mouseX = -100, mouseY = -100;   // current mouse position
+  let ringX  = -100, ringY  = -100;   // smoothed ring position
+  const ease = 0.15;                   // lower = more lag on the ring
+
+  /* Track mouse position */
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX;
+    mouseY = e.clientY;
+    dot.style.left = mouseX + 'px';
+    dot.style.top  = mouseY + 'px';
+  });
+
+  /* Smooth follow loop for the ring */
+  function animate() {
+    ringX += (mouseX - ringX) * ease;
+    ringY += (mouseY - ringY) * ease;
+    ring.style.left = ringX + 'px';
+    ring.style.top  = ringY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+
+  /* Hover detection — add any selectors you want to trigger the grow */
+  const hoverTargets = 'a, button, [role="button"], input[type="submit"], .hoverable';
+
+  document.addEventListener('mouseover', e => {
+    if (e.target.closest(hoverTargets)) {
+      dot.classList.add('is-hover');
+      ring.classList.add('is-hover');
+    }
+  });
+  document.addEventListener('mouseout', e => {
+    if (e.target.closest(hoverTargets)) {
+      dot.classList.remove('is-hover');
+      ring.classList.remove('is-hover');
+    }
+  });
+
+  /* Click pulse */
+  document.addEventListener('mousedown', () => {
+    dot.classList.add('is-click');
+    ring.classList.add('is-click');
+  });
+  document.addEventListener('mouseup', () => {
+    dot.classList.remove('is-click');
+    ring.classList.remove('is-click');
+  });
+
+  /* Hide when cursor leaves the window */
+  document.addEventListener('mouseleave', () => {
+    dot.style.opacity  = '0';
+    ring.style.opacity = '0';
+  });
+  document.addEventListener('mouseenter', () => {
+    dot.style.opacity  = '1';
+    ring.style.opacity = '1';
+  });
+})();
+</script>
+<!-- ========== END CUSTOM CURSOR ========== -->
+
+<nav id="navbar">
+  <a href="index.html" class="nav-name">Henry Mierzwa</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Work</a></li>
+    <li><a href="music.html">Music</a></li>
+    <li><a href="about.html" class="active">About</a></li>
+    <li><a href="#" onclick="openResumeModal(event)">Resume</a></li>
+  </ul>
+</nav>
+
+<section class="about-hero">
+  <div class="about-hero-text">
+    <h1 class="about-intro-heading">
+      Nice to meet you, I'm <span>Henry</span>
+    </h1>
+    <p class="about-intro-body">
+      When I was kid, I always wanted to be in the CIA. Something about high-stakes probleming solving always peaked my interest. While I may not have ended up as a spy (would I tell you anyway?), that same drive for cracking complex puzzles is what led me to product marketing. When I'm not building go-to-market strategies, I'm on stage with Galena Crew, performing alongside my childhood best friends.
+      <br><br>
+      I'm super grateful to have found a career that combines my love for storytelling, problem solving, and creativity. If you want to chat about product marketing, music, or just want to say hi, feel free to reach out:
+    </p>
+    <div class="about-cta-row">
+      <a href="#" onclick="openResumeModal(event)" class="about-cta primary">View my resume →</a>
+      <a href="mailto:byhenrym@gmail.com" class="about-cta secondary">Say Hello</a>
+    </div>
+  </div>
+  <div class="about-portrait-wrap">
+    <div class="about-portrait">
+    <img src="images/headshot.jpg" alt="Henry Mierzwa headshot" draggable="false" 
+    style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;">
+    </div>
+  </div>
+</section>
+
+<div class="about-content">
+
+  <div class="about-section fade-in">
+    <p class="section-label">Experience</p>
+    <h2 class="about-section-title">Where I've been</h2>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-meta">
+          <p class="exp-company">NielsenIQ</p>
+          <p class="exp-dates">2021 – Present</p>
+        </div>
+        <div>
+          <p class="exp-role">Senior Product Marketing Manager</p>
+          <p class="exp-desc">Leading AI product marketing strategy and go-to-market execution for NielsenIQ's enterprise products, including the repositioning of their agentic AI assistant, Ask Arthur.</p>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-meta">
+          <p class="exp-company">NielsenIQ</p>
+          <p class="exp-dates">2019 – 2021</p>
+        </div>
+        <div>
+          <p class="exp-role">Emerging Leaders Program - Product Associate</p>
+          <p class="exp-desc">Completed a competitive rotational program across product management and client-facing roles, identifying measurable revenue opportunities.</p>
+        </div>
+      </div>
+      <div class="exp-item">
+        <div class="exp-meta">
+          <p class="exp-company">PwC</p>
+          <p class="exp-dates">2018</p>
+        </div>
+        <div>
+          <p class="exp-role">Risk Assurance Intern</p>
+          <p class="exp-desc">Supported multiple client engagements by coordinating deliverables and translating complex technical risks into clear insights.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-section fade-in">
+    <p class="section-label">Music</p>
+    <h2 class="about-section-title">Galena Crew, 8+ years strong</h2>
+    <div class="exp-list">
+      <div class="exp-item">
+        <div class="exp-meta">
+          <p class="exp-company">Galena Crew</p>
+          <p class="exp-dates">2017 – Present</p>
+        </div>
+        <div>
+          <p class="exp-role">Founder & Producer/DJ</p>
+          <p class="exp-desc">Founded an electronic production/DJ trio with childhood best friends Maksym and Tuzzy. From college house parties to festival stages — performed at Beyond Wonderland, North Coast Music Festival, and alongside The Chainsmokers, Dillon Francis, and Two Friends.</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="about-section fade-in" id="gallerySection">
+      <p class="section-label">Snapshot</p>
+      <h2 class="about-section-title">Some recent moments</h2>
+      <div class="gallery-carousel" id="galleryCarousel">
+        <div class="gallery-arrows">
+          <div class="gallery-arr" onclick="galleryMove(-1)" aria-label="Previous photo">
+            <svg viewBox="0 0 24 24"><path d="M15 18l-6-6 6-6"/></svg>
+          </div>
+          <div class="gallery-arr" onclick="galleryMove(1)" aria-label="Next photo">
+            <svg viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></svg>
+          </div>
+        </div>
+      </div>
+      <p class="gallery-counter" id="galleryCounter"></p>
+    </div>
+</div>
+
+<footer>
+  <p class="footer-headline">Thanks for stopping by</p>
+  <div class="footer-top">
+    <div>
+      <div class="footer-info">
+        <p>byhenrym@gmail.com</p>
+        <p>Designed, vibed, and coded by yours truly</p>
+        <p>© 2026 Henry Mierzwa</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:byhenrym@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/henmierz" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== RESUME MODAL — copy this entire block to any page ========== -->
+<style>
+  .resume-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(14, 14, 14, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .resume-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .resume-modal {
+    position: relative;
+    background: var(--white, #FAFAFA);
+    border: 1px solid var(--blue, #1A6EFF);
+    border-radius: 16px;
+    padding: 48px 44px 40px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(26, 110, 255, 0.25), 0 0 60px rgba(26, 110, 255, 0.08);
+    transform: scale(0.92) translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.35s ease;
+  }
+  .resume-overlay.is-open .resume-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  .resume-modal-close {
+    position: absolute; top: 16px; right: 18px;
+    background: none; border: none;
+    font-size: 22px; line-height: 1;
+    color: var(--gray, #6B6B6B);
+    cursor: pointer; transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .resume-modal-close:hover { color: var(--black, #0E0E0E); }
+  .resume-modal h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--black, #0E0E0E);
+    margin-bottom: 14px;
+  }
+  .resume-modal p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gray, #6B6B6B);
+    margin-bottom: 32px;
+  }
+  .resume-modal-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: white; background: var(--blue, #1A6EFF);
+    border: none; border-radius: 100px;
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .resume-modal-btn:hover {
+    background: var(--blue-dark, #0A4FCC);
+    box-shadow: 0 4px 20px rgba(26, 110, 255, 0.35);
+  }
+</style>
+
+<div class="resume-overlay" id="resumeOverlay">
+  <div class="resume-modal">
+    <button class="resume-modal-close" onclick="closeResumeModal()" aria-label="Close">&times;</button>
+    <h2>Resume</h2>
+    <p>To respect confidentiality, my resume is shared on a personal basis. Feel free to reach out and I'll be happy to send it your way!</p>
+    <a class="resume-modal-btn" href="mailto:byhenrym@gmail.com?subject=Resume%20Inquiry">Contact Me &rarr;</a>
+  </div>
+</div>
+
+<script>
+  function openResumeModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('resumeOverlay').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeResumeModal() {
+    document.getElementById('resumeOverlay').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('resumeOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeResumeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeResumeModal();
+  });
+</script>
+<!-- ========== END RESUME MODAL ========== -->
+
+
+<script>
+(function() {
+  // ============================================================
+  //  PHOTO GALLERY — auto-detects images in images/gallery/
+  //
+  //  HOW TO USE:
+  //  1. Name your photos sequentially: 1.jpg, 2.jpg, 3.jpg …
+  //  2. Drop them in images/gallery/
+  //  3. That's it. No code changes needed, ever.
+  //
+  //  Supports .jpg, .jpeg, .png, and .webp
+  //  Checks up to 100 images per format.
+  // ============================================================
+
+  const FOLDER = 'images/gallery/';
+  const EXTENSIONS = ['jpg', 'jpeg', 'png', 'webp', 'heic'];
+
+  let current = 0;
+  let animating = false;
+  const carousel = document.getElementById('galleryCarousel');
+  const counter = document.getElementById('galleryCounter');
+  const section = document.querySelector('.gallery-section');
+
+  // Probe a single image URL — resolves true/false
+  function probeImage(src) {
+    return new Promise(function(resolve) {
+      const img = new Image();
+      img.onload = function() { resolve(true); };
+      img.onerror = function() { resolve(false); };
+      img.src = src;
+    });
+  }
+
+  // For a given number (e.g. 1), try every extension until one exists
+  async function findImage(num) {
+    for (let ext of EXTENSIONS) {
+      const src = FOLDER + num + '.' + ext;
+      const exists = await probeImage(src);
+      if (exists) return src;
+    }
+    return null;
+  }
+
+  // Discover all images: 1.jpg, 2.jpg … stops at the first gap
+  async function discoverPhotos() {
+    const found = [];
+    for (let i = 1; i <= 100; i++) {
+      const src = await findImage(i);
+      if (!src) break;  // stop at first missing number
+      found.push(src);
+    }
+    return found;
+  }
+
+  // Build and start the carousel once photos are known
+  function initCarousel(photos) {
+    const TOTAL = photos.length;
+
+    // Hide the section entirely if no photos found
+    if (TOTAL === 0) {
+      section.style.display = 'none';
+      return;
+    }
+
+    // Build slides
+    photos.forEach(function(src, i) {
+      const slide = document.createElement('div');
+      slide.className = 'gallery-slide';
+      slide.dataset.idx = i;
+
+      const img = new Image();
+      img.src = src;
+      img.alt = 'Gallery photo ' + (i + 1);
+      img.draggable = false;
+      img.onerror = function() {
+        this.parentElement.innerHTML = '<div class="gallery-slide-placeholder">PHOTO ' + (i + 1) + '</div>';
+      };
+      slide.appendChild(img);
+
+      carousel.insertBefore(slide, carousel.querySelector('.gallery-arrows'));
+    });
+
+    function layout() {
+      var slides = carousel.querySelectorAll('.gallery-slide');
+      slides.forEach(function(s) {
+        var idx = parseInt(s.dataset.idx);
+        var diff = idx - current;
+        if (diff > TOTAL / 2) diff -= TOTAL;
+        if (diff < -TOTAL / 2) diff += TOTAL;
+        s.dataset.pos = (diff >= -3 && diff <= 3) ? diff : 'hidden';
+      });
+      counter.innerHTML = '<span>' + (current + 1) + '</span> / ' + TOTAL;
+    }
+
+    window.galleryMove = function(dir) {
+      if (animating) return;
+      animating = true;
+      current = (current + dir + TOTAL) % TOTAL;
+      layout();
+      setTimeout(function() { animating = false; }, 550);
+    };
+
+    // Keyboard navigation
+    document.addEventListener('keydown', function(e) {
+      var rect = carousel.getBoundingClientRect();
+      var inView = rect.top < window.innerHeight && rect.bottom > 0;
+      if (!inView) return;
+      if (e.key === 'ArrowLeft') galleryMove(-1);
+      if (e.key === 'ArrowRight') galleryMove(1);
+    });
+
+    // Touch/swipe support
+    var touchStartX = 0;
+    carousel.addEventListener('touchstart', function(e) {
+      touchStartX = e.touches[0].clientX;
+    }, { passive: true });
+    carousel.addEventListener('touchend', function(e) {
+      var diff = touchStartX - e.changedTouches[0].clientX;
+      if (Math.abs(diff) > 50) {
+        galleryMove(diff > 0 ? 1 : -1);
+      }
+    }, { passive: true });
+
+    layout();
+  }
+
+  // Kick it off
+  discoverPhotos().then(initCarousel);
+})();
+</script>
+
+
+<script>
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach((e, i) => {
+      if (e.isIntersecting) { e.target.style.transitionDelay = (i * 0.12) + 's'; e.target.classList.add('visible'); }
+    });
+  }, { threshold: 0.1 });
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+</body>
+</html>

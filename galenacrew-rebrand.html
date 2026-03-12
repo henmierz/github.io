@@ -1,0 +1,931 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Mierzwa — Building a brand identity from scratch</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<meta name="theme-color" content="#0047FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1A6EFF;
+    --blue-light: #4B91FF;
+    --blue-dark: #0A4FCC;
+    --black: #0E0E0E;
+    --dark: #1C1C1C;
+    --gray: #6B6B6B;
+    --light-gray: #F0F0EE;
+    --white: #FAFAFA;
+    --border: #E2E2E0;
+    --gradient: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 25%, var(--blue) 75%, var(--blue-light) 100%);
+  }
+
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 100;
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 24px 60px;
+    background: rgba(250,250,250,0.92);
+    backdrop-filter: blur(12px);
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.3s;
+  }
+  nav.scrolled { border-color: var(--border); }
+  .nav-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; color: var(--black); text-decoration: none; }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 14px;
+    letter-spacing: 0.02em; color: var(--gray); text-decoration: none; transition: color 0.2s; position: relative;
+  }
+  .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px; background: var(--blue); transition: width 0.25s ease; }
+  .nav-links a:hover { color: var(--black); }
+  .nav-links a:hover::after { width: 100%; }
+
+  /* HERO */
+  .case-hero {
+    padding: 140px 60px 80px;
+    margin-bottom: 100px;
+    animation: fadeUp 0.8s ease both;
+    margin: 0 auto; padding-left: 250px; padding-right: 250px;
+  }
+  .back-link {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--gray);
+    text-decoration: none; margin-bottom: 40px;
+    transition: color 0.2s;
+  }
+  .back-link:hover { color: var(--blue); }
+  .case-hero-eyebrow {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 12px;
+    letter-spacing: 0.15em; color: var(--blue); text-transform: uppercase; margin-bottom: 16px;
+  }
+  .case-hero-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 4.5vw, 20px); line-height: 1.15;
+    letter-spacing: -0.03em; color: var(--black); margin-bottom: 24px;
+  }
+
+  /* Meta table */
+  .case-meta {
+    display: grid; grid-template-columns: repeat(3, 1fr);
+    gap: 0; border: 1px solid var(--border); border-radius: 12px;
+    overflow: hidden;
+  }
+  .case-meta-item {
+    padding: 24px 28px;
+    border-right: 1px solid var(--border);
+  }
+  .case-meta-item:last-child { border-right: none; }
+  .meta-label {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.15em; text-transform: uppercase; color: var(--gray); margin-bottom: 8px;
+  }
+  .meta-value { font-family: 'DM Sans', sans-serif; font-size: 15px; font-weight: 400; color: var(--black); }
+
+  /* Hero image */
+  .case-hero-img {
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #0A1628 0%, #0D2052 40%, #1565FF 70%, #4B91FF 100%);
+    border-radius: 16px; overflow: hidden; position: relative;
+    margin: 0 auto; padding-left: 250px; padding-right: 250px;
+  }
+  .case-hero-img-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 40px 40px;
+  }
+  .case-hero-img-label {
+    position: absolute; top: 50%; left: 50%; transform: translate(-50%,-50%);
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(48px, 8vw, 100px);
+    color: rgba(255,255,255,0.1); letter-spacing: -0.04em; user-select: none; white-space: nowrap;
+  }
+
+  /* CONTENT */
+  .case-content { margin: 0; padding-bottom: 100px; padding-left: 250px; padding-right: 250px;}
+
+  .cs-section { margin-bottom: 100px; }
+
+  .cs-section-label {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue);
+    margin-bottom: 20px; display: flex; align-items: center; gap: 12px;
+  }
+  .cs-section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+
+  .cs-h2 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(22px, 2.5vw, 32px); letter-spacing: -0.025em;
+    color: var(--black); margin-bottom: 20px; line-height: 1.2;
+  }
+  .cs-h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 18px;
+    letter-spacing: -0.01em; color: var(--black); margin-bottom: 12px; margin-top: 32px;
+  }
+  .cs-p { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+  .cs-p strong { color: var(--black); }
+
+  .cs-list { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 12px; margin-bottom: 20px; }
+  .cs-list li {
+    font-size: 15px; line-height: 1.7; color: #444;
+    padding-left: 20px; position: relative;
+  }
+  .cs-list li::before { content: '—'; position: absolute; left: 0; color: var(--blue); }
+
+  .cs-numbered { padding-left: 0; list-style: none; display: flex; flex-direction: column; gap: 24px; margin-bottom: 20px; }
+  .cs-numbered li { display: grid; grid-template-columns: 32px 1fr; gap: 16px; }
+  .cs-num {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 22px;
+    color: var(--blue); letter-spacing: -0.03em; line-height: 1;
+    padding-top: 2px;
+  }
+  .cs-num-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 18px; color: var(--black); margin-bottom: 6px; }
+  .cs-num-desc { font-size: 15px; line-height: 1.7; color: #555; }
+
+  .cs-quote {
+    border-left: 3px solid var(--blue); padding: 20px 28px;
+    background: #EEF3FF; border-radius: 0 8px 8px 0; margin: 32px 0;
+    font-style: italic; font-size: 16px; line-height: 1.7; color: #333;
+  }
+  .cs-quote .cs-quote-attr {
+    display: block; font-style: normal; font-size: 13px; color: var(--gray);
+    margin-top: 10px;
+  }
+
+  .cs-callout {
+    background: var(--black); color: white; padding: 40px 48px;
+    border-radius: 16px; margin: 40px 0;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 32px;
+  }
+  .cs-callout-stat {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(36px, 5vw, 56px); letter-spacing: -0.04em; line-height: 1; margin-bottom: 8px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .cs-callout-label { font-size: 13px; color: #888; line-height: 1.5; }
+
+  .cs-callout-3 {
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+
+  .cs-divider { border: none; border-top: 1px solid var(--border); margin: 48px 0; }
+
+  /* ── NEW: Two-column layout ── */
+  .cs-two-col {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 48px; margin: 28px 0;
+  }
+  .cs-two-col h3 {
+    font-family: 'Syne', sans-serif; font-weight: 700; font-size: 16px;
+    color: var(--black); margin-bottom: 12px;
+  }
+  .cs-two-col .cs-list { margin-bottom: 0; }
+
+  /* ── NEW: Pill tags ── */
+  .cs-pills { display: flex; flex-wrap: wrap; gap: 10px; margin: 16px 0 28px; }
+  .cs-pill {
+    font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500;
+    padding: 7px 16px; border-radius: 100px;
+    background: var(--light-gray); border: 1px solid var(--border); color: var(--black);
+  }
+  .cs-pill.accent {
+    background: #EEF3FF; border-color: rgba(26, 110, 255, 0.25); color: var(--blue);
+    font-weight: 600;
+  }
+
+  /* ── NEW: Content bucket cards ── */
+  .cs-bucket-grid {
+    display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 16px; margin: 28px 0;
+  }
+  .cs-bucket-card {
+    background: white; border: 1px solid var(--border); border-radius: 12px; padding: 24px;
+  }
+  .cs-bucket-card h4 {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 17px;
+    color: var(--black); margin-bottom: 4px;
+  }
+  .cs-bucket-vibe {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.1em; text-transform: uppercase; color: var(--blue); margin-bottom: 12px;
+  }
+  .cs-bucket-card p {
+    font-size: 14px; line-height: 1.7; color: #555; margin: 0;
+  }
+
+  /* Interests grid */
+  .interests-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 28px; padding: 10px, 0px;}
+  .interest-card {
+    border: 1px solid var(--border); border-radius: 14px; padding: 24px; 
+    transition: border-color 0.2s, box-shadow 0.2s;
+  }
+  .interest-card:hover { border-color: #C4D8FF; box-shadow: 0 4px 20px rgba(26,110,255,0.07); }
+  .interest-icon { font-size: 24px; margin-bottom: 12px; }
+  .interest-title { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 14px; color: var(--black); margin-bottom: 8px; }
+  .interest-desc { font-size: 13px; line-height: 1.65; color: var(--gray); }
+
+  /* ── NEW: Image grid ── */
+  .cs-img-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin: 36px 0;
+  }
+  .cs-img-grid img {
+    width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block;
+  }
+  .cs-img-full { margin: 36px 0; }
+  .cs-img-full img {
+    width: 100%; border-radius: 12px; border: 1px solid var(--border); display: block;
+  }
+  .cs-img-caption {
+    font-size: 13px; color: var(--gray); margin-top: 10px; font-style: italic;
+  }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 64px 60px 48px; margin: 0 auto;         
+    padding-left: 250px;      
+    padding-right: 250px;}
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; }
+  .footer-headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 800;
+    font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.03em; margin-bottom: 24px;
+    background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .footer-info { font-size: 14px; line-height: 2; color: #777; }
+  .footer-links { display: flex; gap: 48px; padding-top: 8px; }
+  .footer-links a {
+    font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500;
+    color: #777; text-decoration: none; transition: color 0.2s;
+  }
+  .footer-links a:hover { color: white; }
+  .footer-bottom { border-top: 1px solid #2A2A2A; padding-top: 24px; font-size: 12px; color: #444; font-family: 'Syne', sans-serif; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { opacity: 0; transform: translateY(20px); transition: opacity 0.6s ease, transform 0.6s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 900px) {
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    .case-hero { padding: 120px 24px 60px; padding-left: 24px; padding-right: 24px; }
+    .case-hero-img { border-radius: 10px; }
+    .case-content { margin: 0 24px; padding-left: 24px; padding-right: 24px; }
+    .case-meta { grid-template-columns: 1fr; }
+    .case-meta-item { border-right: none; border-bottom: 1px solid var(--border); }
+    .case-meta-item:last-child { border-bottom: none; }
+    .interests-grid { grid-template-columns: 1fr 1fr; }
+    .cs-callout { grid-template-columns: 1fr; }
+    .cs-callout-3 { grid-template-columns: 1fr; }
+    .cs-two-col { grid-template-columns: 1fr; gap: 32px; }
+    .cs-img-grid { grid-template-columns: 1fr; }
+    .cs-bucket-grid { grid-template-columns: 1fr; }
+    footer { padding: 48px 24px 36px; padding-left: 24px; padding-right: 24px; }
+    .footer-top { flex-direction: column; gap: 32px; }
+    div[style*="padding-left: 250px"] { padding-left: 24px !important; padding-right: 24px !important; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ========== CUSTOM CURSOR ========== -->
+<style>
+  *, *::before, *::after { cursor: none !important; }
+  .cursor-dot {
+    position: fixed; top: 0; left: 0; width: 8px; height: 8px;
+    background: #0A4FCC; border-radius: 50%; pointer-events: none;
+    z-index: 99999; transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, background 0.3s ease;
+  }
+  .cursor-ring {
+    position: fixed; top: 0; left: 0; width: 36px; height: 36px;
+    border: 2px solid #0a4ecc; background: rgba(43, 78, 255, 0.10);
+    border-radius: 50%; pointer-events: none; z-index: 99998;
+    transform: translate(-50%, -50%);
+    transition: width 0.3s ease, height 0.3s ease, border-color 0.3s ease, background 0.3s ease;
+  }
+  .cursor-dot.is-hover { width: 12px; height: 12px; background: #2b4eff; }
+  .cursor-ring.is-hover { width: 56px; height: 56px; border-color: #2b4eff; background: rgba(43, 78, 255, 0.10); }
+  .cursor-dot.is-click { width: 6px; height: 6px; }
+  .cursor-ring.is-click { width: 30px; height: 30px; }
+  @media (hover: none) and (pointer: coarse) {
+    .cursor-dot, .cursor-ring { display: none !important; }
+    *, *::before, *::after { cursor: auto !important; }
+  }
+</style>
+<div class="cursor-dot"></div>
+<div class="cursor-ring"></div>
+<script>
+(function () {
+  const dot  = document.querySelector('.cursor-dot');
+  const ring = document.querySelector('.cursor-ring');
+  if (!dot || !ring) return;
+  let mouseX = -100, mouseY = -100, ringX = -100, ringY = -100;
+  const ease = 0.15;
+  document.addEventListener('mousemove', e => {
+    mouseX = e.clientX; mouseY = e.clientY;
+    dot.style.left = mouseX + 'px'; dot.style.top = mouseY + 'px';
+  });
+  function animate() {
+    ringX += (mouseX - ringX) * ease; ringY += (mouseY - ringY) * ease;
+    ring.style.left = ringX + 'px'; ring.style.top = ringY + 'px';
+    requestAnimationFrame(animate);
+  }
+  animate();
+  const hoverTargets = 'a, button, [role="button"], input[type="submit"], .hoverable';
+  document.addEventListener('mouseover', e => { if (e.target.closest(hoverTargets)) { dot.classList.add('is-hover'); ring.classList.add('is-hover'); } });
+  document.addEventListener('mouseout', e => { if (e.target.closest(hoverTargets)) { dot.classList.remove('is-hover'); ring.classList.remove('is-hover'); } });
+  document.addEventListener('mousedown', () => { dot.classList.add('is-click'); ring.classList.add('is-click'); });
+  document.addEventListener('mouseup', () => { dot.classList.remove('is-click'); ring.classList.remove('is-click'); });
+  document.addEventListener('mouseleave', () => { dot.style.opacity = '0'; ring.style.opacity = '0'; });
+  document.addEventListener('mouseenter', () => { dot.style.opacity = '1'; ring.style.opacity = '1'; });
+})();
+</script>
+<!-- ========== END CUSTOM CURSOR ========== -->
+
+<nav id="navbar">
+  <a href="index.html" class="nav-name">Henry Mierzwa</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Work</a></li>
+    <li><a href="music.html">Music</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#" onclick="openResumeModal(event)">Resume</a></li>
+  </ul>
+</nav>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- HERO -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-hero">
+  <a href="index.html" class="back-link">← Back to Work</a>
+  <p class="case-hero-eyebrow">Galena Crew</p>
+  <h1 class="case-hero-title">Building a brand identity from scratch</h1>
+  <div class="case-meta">
+    <div class="case-meta-item">
+      <p class="meta-label">My Role</p>
+      <p class="meta-value">Founder · Brand Strategist · Workshop Facilitator</p>
+    </div>
+    <div class="case-meta-item">
+      <p class="meta-label">Key Skills</p>
+      <p class="meta-value">Brand Strategy · Social Media Management · Positioning · Market Research</p>
+    </div>
+    <div class="case-meta-item">
+      <p class="meta-label">Timeframe</p>
+      <p class="meta-value">Q3 2025 – Q1 2026 <br>3 months prep → 4-hour workshop → ongoing</p>
+    </div>
+  </div>
+</div>
+
+<div style="padding: 0 60px; margin-bottom: 100px; padding-left: 250px; padding-right: 250px;">
+  <div class="case-hero-img">
+    <div class="case-hero-img-grid">
+      <img src="images/Galena Crew 1.jpg" draggable="false" style="width: 100%; height: 100%; object-fit: cover; object-position: center;">
+    </div>
+  </div>
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- CONTENT -->
+<!-- ═══════════════════════════════════════════════ -->
+<div class="case-content">
+
+  <!-- ── OVERVIEW ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Overview</p>
+    <h2 class="cs-h2">How I designed a branding workshop that turned our unorganized DJ group into a festival-ready brand</h2>
+    <p class="cs-p">
+      Galena Crew is a Chicago-based DJ/producer trio comprised of myself (Henry), Maksym, and Tuzzy. We've been childhood best friends since 8 years old. We formed the project in 2017, and slowly grew from college house parties to opening for global artists like The Chainsmokers, Said The Sky, Galantis, and Audien. We've landed releases on labels like Lost In Dreams (Insomniac) and Discovery Project (Insomniac). On paper, things were moving. But our brand wasn't keeping up with our music, and that gap was starting to cost us.
+    </p>
+    <p class="cs-p">
+      I spent several months designing a structured branding workshop from scratch, facilitated a 4-hour session with the group, and built an identity system that we immediately put into practice across every area — social media, photography, tone of voice, production, graphics, and live performance.
+    </p>
+
+    <div class="cs-callout cs-callout-3">
+      <div>
+        <p class="cs-callout-stat">5%</p>
+        <p class="cs-callout-label">Monthly follower growth on Instagram</p>
+      </div>
+      <div>
+        <p class="cs-callout-stat">214%</p>
+        <p class="cs-callout-label">Increase in daily streams across DSPs</p>
+      </div>
+      <div>
+        <p class="cs-callout-stat">8%</p>
+        <p class="cs-callout-label"> Average uptick in engagement across socials</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── THE PROBLEM ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Problem</p>
+    <h2 class="cs-h2">Good music, unclear story</h2>
+    <p class="cs-p">
+      If you stumbled across our Instagram a year ago, you likely had no idea what Galena Crew was about or who was actually in the group, leaving little reason to follow our journey.
+    </p>
+    <p class="cs-p">
+      Sure, our initial aesthetics were confusing, but the real issue was deeper: <strong>three people, zero alignment.</strong> We each had different instincts about what to post, how to talk to fans, and what our "vibe" was supposed to be. We were posting inconsistently, and even when we were posting, it was without meaning (no common language, no framework, no north star). Our brand was everything, everywhere, all at once — and it wasn't translating to ticket sales, streaming numbers, or social media growth.
+    </p>
+    <div class="cs-quote">
+      The most frustrating part was knowing we had the talent and the work ethic to be successful, but not having the brand to match it. It was a clear bottleneck in our ability to grow Galena Crew into the kind of project we knew it could be.
+    </div>
+    <p class="cs-p">
+      I knew fixing this wasn't as simple as a conversation or a few weeks of posting. Solving this required extensive research, careful preparation, and a true framework -  and I decided to start building just that.
+    </p>
+  </div>
+
+  <!-- ── THE APPROACH ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Approach</p>
+    <h2 class="cs-h2">Designing and building a workshop</h2>
+    <p class="cs-p">
+      Over the next few months, I identified key areas for the workshop — pulling from industry-standard, brand strategy frameworks, the 12 brand archetypes model, content systems thinking, and case studies from other artists who've succcessfully positioned their project. The goal wasn't to reinvent the wheel, it was to <strong>organize and better execute what we already were</strong>.
+    </p>
+
+    <h3 class="cs-h3">My proposed structure</h3>
+    <p class="cs-p">Each section served a unique purpose, allowing us to systematically address each aspect of our brand identity.</p>
+
+    <ul class="cs-numbered">
+      <li>
+        <span class="cs-num">01</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Intro</p>
+          <p class="cs-num-desc">Began with an open discussion about what Galena Crew means to us followed by an SCQA to ensure we were all on the same page.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">02</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Internal Audit</p>
+          <p class="cs-num-desc">Levelset with an SCQA followed by an honest audit of where we were, what we were doing well, and what we weren't.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">03</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Vision Setting</p>
+          <p class="cs-num-desc">Aligning on where we'd like to be in 1 year, 2-3 years, and 5 years.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">04</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Brand Identity & Archetype</p>
+          <p class="cs-num-desc">Defining our essence, our voice, and our personality through the 12 archetypes framework and a brand language exercise.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">05</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Visual Identity</p>
+          <p class="cs-num-desc">Identifying our moods, motifs, color palette, photography style, and performance look.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">06</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Sound Identity</p>
+          <p class="cs-num-desc">Establishing our sonic lane: genres, production elements, reference artists, and reference tracks.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">07</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Content Strategy</p>
+          <p class="cs-num-desc">Defining content buckets that link back to our brand identity.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">08</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Content Calendar</p>
+          <p class="cs-num-desc">Building a repeatable content calendar with consistent post formats, platforms, and cadence.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">09</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Close</p>
+          <p class="cs-num-desc">Establishing commitment to the work, next steps, and accountability measures.</p>
+        </div>
+      </li>
+    </ul>
+    <br>
+    <p class="cs-p">
+      We sat down together in December 2025 and went through each section, which sparked a lot of great conversations, honest reflections, and most importantly, alignment.
+    </p>
+
+  </div>
+
+  <!-- ── BRAND IDENTITY ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Result</p>
+    <h2 class="cs-h2">The brand identity we landed on</h2>
+    <p class="cs-p">
+      Through the brand archetype exercise, our answers were all aligned. Galena Crew is an <strong>Everyman (80%) / Jester (20%)</strong> — a relatable, wholesome friend group that also happens to throw the most energetic party in dance music.
+    </p>
+
+    <h3 class="cs-h3">What we were doing well vs what we weren't</h3>
+    <div class="cs-pills">
+      <span class="cs-pill accent">Music production</span>
+      <span class="cs-pill accent">Live show energy</span>
+      <span class="cs-pill accent">Networking</span>
+      <span class="cs-pill accent">Saying "no"</span>
+      <span class="cs-pill accent">Keeping relationships and staying in contact</span>
+      <span class="cs-pill accent">Capitalizing on new encounters</span>
+      <span class="cs-pill accent">Professionalism</span>
+      <span class="cs-pill">Communication</span>
+      <span class="cs-pill">Accountability</span>
+      <span class="cs-pill">Consistency</span>
+      <span class="cs-pill">Music recognition</span>
+      <span class="cs-pill">Overcoming long distance barriers</span>
+      <span class="cs-pill">Live show alignment</span>
+      <span class="cs-pill">Developing a loyal fan base</span>
+    </div>
+
+    <h3 class="cs-h3" style="margin-top: 16px;">Words that described us vs words that didn't</h3>
+    <div class="cs-pills">
+      <span class="cs-pill accent">Relatable</span>
+      <span class="cs-pill accent">High-Energy</span>
+      <span class="cs-pill accent">Contagious</span>
+      <span class="cs-pill accent">Wholesome</span>
+      <span class="cs-pill accent">Goofy</span>
+      <span class="cs-pill accent">Inclusive</span>
+      <span class="cs-pill accent">Slightly Chaotic</span>
+      <span class="cs-pill accent">Approachable</span>
+      <span class="cs-pill accent">Genuine</span>
+      <span class="cs-pill accent">Inspiring</span>
+      <span class="cs-pill accent">Funny</span>
+      <span class="cs-pill accent">Passionate</span>
+      <span class="cs-pill">Rebellious</span>
+      <span class="cs-pill">Authoritative</span>
+      <span class="cs-pill">Mysterious</span>
+      <span class="cs-pill">Edgy</span>
+      <span class="cs-pill">Overly Professional</span>
+      <span class="cs-pill">Anti-Social</span>
+      <span class="cs-pill">Niche</span>
+      <span class="cs-pill">Informative</span>
+      <span class="cs-pill">Simple</span>
+      <span class="cs-pill">Financially Motivated</span>
+    </div>
+
+    <div class="cs-quote">
+      "Music through the lens of 3 childhood best friends."
+      <span class="cs-quote-attr">— Updated brand statement</span>
+    </div>
+
+    <p class="cs-p" style="margin-top: 28px;">
+      Overall, these brand attributes weren't anything ground-breaking, we just hadn't named them, organized them, or leaned into them the right way. The next step was determining how to plug this newly defined identity into our content.
+    </p>
+  </div>
+
+  <!-- ── Implementation ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Implementation</p>
+    <h2 class="cs-h2">Applying the brand into our content strategy</h2>
+    <p class="cs-p">
+      This was the most tactical part of the workshop. We used sticky notes to identify specific video ideas, that we then organized into five distinct content buckets, each tied to a specific set of brand attributes.
+    </p>
+
+    <div class="cs-bucket-grid">
+      <div class="cs-bucket-card">
+        <h4>Performances</h4>
+        <div class="cs-pills">
+          <span class="cs-pill accent">Inclusive</span>
+          <span class="cs-pill accent">High‑Energy</span>
+          <span class="cs-pill accent">Slightly Chaotic</span>
+        </div>
+        <ul class="cs-list">
+          <li>Behind-the-scenes</li>
+          <li>Live drop reactions</li>
+          <li>Contagious crowd moments</li>
+          <li>Wholesome pre/post-show huddles</li>
+          <li>Vlog clips</li>
+          <li>Inspiring throwback comparisons</li>
+        </ul>
+      </div>
+      <div class="cs-bucket-card">
+        <h4>Direct Promo</h4>
+        <div class="cs-pills">
+          <span class="cs-pill accent">Authentic</span>
+          <span class="cs-pill accent">Passionate</span>
+          <span class="cs-pill accent">Contagious</span>
+        </div>
+        <ul class="cs-list">
+          <li>DJing in scenic locations</li>
+          <li>Custom flyers</li>
+          <li>Show trailers</li>
+          <li>Song test videos from the car or studio</li>
+        </ul>
+      </div>
+      <div class="cs-bucket-card">
+        <h4>Outside of Music</h4>
+        <div class="cs-pills">
+          <span class="cs-pill accent">Relatable</span>
+          <span class="cs-pill accent">Genuine</span>
+          <span class="cs-pill accent">Approachable</span>
+        </div>
+        <ul class="cs-list">
+          <li>Day-in-the-life from our actual day jobs</li>
+          <li>Doing each other's hobbies</li>
+          <li>"Get ready with me" where the other two narrate</li>
+          <li>FaceTiming the missing member</li>
+        </ul>
+      </div>
+      <div class="cs-bucket-card">
+        <h4>Friendship</h4>
+        <div class="cs-pills">
+          <span class="cs-pill accent">Fun</span>
+          <span class="cs-pill accent">Wholesome</span>
+          <span class="cs-pill accent">Authentic</span>
+        </div>
+        <ul class="cs-list">
+          <li>Non-music trip recaps</li>
+          <li>Story times</li>
+          <li>Old concert throwbacks</li>
+          <li>Come-up journey</li>
+          <li>Lessons learned</li>
+        </ul>
+      </div>
+      <div class="cs-bucket-card">
+        <h4>Memes</h4>
+        <div class="cs-pills">
+          <span class="cs-pill accent">Goofy</span>
+          <span class="cs-pill accent">Funny</span>
+          <span class="cs-pill accent">Contagious</span>
+        </div>
+        <ul class="cs-list">
+          <li>Snapchat POVs</li>
+          <li>Uber driver DJ skits</li>
+          <li>DJing in random public spaces</li>
+          <li>Hopping on social media trends with our spin</li>
+        </ul>
+      </div>
+    </div>
+    <p class="cs-p">
+      Every post we make moving forward will map back to one of these buckets, and thus, back to our brand identity. This will make content creation much easier and more consistent, while also ensuring that everything we post is intentional and on-brand.
+    </p>
+    <h3 class="cs-h3">Cadence & planning system</h3>
+    <p class="cs-p">
+      We established a weekly check-in: <strong>1 hour every Sunday night</strong> to finalize the upcoming week's content, as well as a longer planning session: <strong>first Saturday of each month</strong> to plan the full month ahead. Defining this regular cadence was super important because it created an accountability system and ensured that content is always planned in advance, rather than being thrown together last minute.
+    </p>
+  </div>
+
+
+  <!-- ── RESULTS ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Impact</p>
+    <h2 class="cs-h2">What happened next</h2>
+    <p class="cs-p">We've already seen substantial impact within the first few months:</p>
+
+    <div class="interests-grid">
+      <div class="interest-card">
+        <p class="cs-callout-stat">5%</p>
+        <p class="interest-title">Monthly follower growth on Instagram</p>
+        <p class="interest-desc">Directly tied to our consistent content strategy on main and trial reels.</p>
+      </div>
+      <div class="interest-card">
+        <p class="cs-callout-stat">214%</p>
+        <p class="interest-title">Increase in daily streams across DSPs</p>
+        <p class="interest-desc">From more active incorporation of our music into our content strategy.</p>
+      </div>
+      <div class="interest-card">
+        <p class="cs-callout-stat">8%</p>
+        <p class="interest-title">Average uptick in engagement across socials</p>
+        <p class="interest-desc">Caused from our improved community engagement efforts across all platforms.</p>
+      </div>
+      <div class="interest-card">
+        <p class="cs-callout-stat">6x</p>
+        <p class="interest-title">More content per week</p>
+        <p class="interest-desc">We went from maybe posting once a week, on one platform to everyday across 3 platforms</p>
+      </div>
+      <div class="interest-card">
+        <p class="cs-callout-stat">2+</p>
+        <p class="interest-title">Shows booked</p>
+        <p class="interest-desc">Since implementation, we've locked down two major performances, to be announced soon.</p>
+      </div>
+      <div class="interest-card">
+        <p class="cs-callout-stat">> 100k</p>
+        <p class="interest-title">Views on YouTube</p>
+        <p class="interest-desc">Surpassed the 6-digit milestone on our vlogs, music, and shorts. We're now approaching 200k!</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── REFLECTIONS ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Reflection</p>
+    <h2 class="cs-h2">What I learned leading this</h2>
+    
+    <p class="cs-p">
+      This project has been incredibly rewarding. It was a unique blend of strategy, creativity, and execution, that forced me to reach outside my comfort zone. I'm already thinking about how to apply this framework in a professional context. 
+      <br><br>
+      Here are my key takeaways:
+    </p>
+
+    <ul class="cs-numbered">
+      <li>
+        <span class="cs-num">→</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Brand strategy isn't just for corporations and brands</p>
+          <p class="cs-num-desc">Artists, just like ourselves, that have no management backing or deep industry connections typically sit on untapped identity gold. The frameworks used in brands and boardrooms work just as well (or even better perhaps) for a three-person DJ crew in Chicago.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">→</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Honest conversations are hard but necessary</p>
+          <p class="cs-num-desc">This is why it's been such an advantage to be best friends first before artists. It wasn't uncomfortable to say "here's what we're bad at" or be vulnerable throughout the process. Honesty and realism are foundational to a successful brand strategy.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">→</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">You don't need to burn it down</p>
+          <p class="cs-num-desc">We didn't need a new name, genre, or logo - we needed <em>alignment</em>. The answer was already there, it was just buried under inconsistency and lack of communication. The workshop gave us the consistency we needed and it's changeed so much already.</p>
+        </div>
+      </li>
+      <li>
+        <span class="cs-num">→</span>
+        <div class="cs-num-content">
+          <p class="cs-num-title">Organization outworks motivation</p>
+          <p class="cs-num-desc">This one was the toughest for me to accept. How could I be so motivated, but not see results that reflect it? I learned that motivation only gets you so far. The real success comes from a content framework tied to brand identity and a defined cadence for planning sessions.</p>
+        </div>
+      </li>
+    </ul>
+  </div>
+
+  <!-- ── WORKSHOP GALLERY ── -->
+  <div class="cs-section fade-in">
+    <p class="cs-section-label">Gallery</p>
+    <h2 class="cs-h2">Scenes from the workshop</h2>
+    <!-- UPDATE IMAGE PATHS -->
+    <div class="cs-img-grid">
+      <div>
+        <img src="images/Branding session 1.jpg" alt="Candid shot from the workshop" draggable="false">
+        <p class="cs-img-caption">Candid of Tuzzy (clearly he loved the workshop)</p>
+      </div>
+      <div>
+        <img src="images/Branding session 3.jpg" alt="Brand language exercise" draggable="false">
+        <p class="cs-img-caption">Self assessment — what we're currently doing well vs not, and defining who we are and who we're not, bucketed into common themes</p>
+      </div>
+    </div>
+    <div class="cs-img-grid" style="margin-top: 16px;">
+      <div>
+        <img src="images/Branding session 4.jpg" alt="Goals boards: 1, 3, and 5 year" draggable="false">
+        <p class="cs-img-caption">Goal setting — where we'd like to be in 1, 3, and 5 years</p>
+      </div>
+      <div>
+        <img src="images/Branding session 2.jpg" alt="Full content bucket board overview" draggable="false">
+        <p class="cs-img-caption">Social media strategy — 5 content buckets, connected to brand themes from the self assessment and mapped to specific social media ideas</p>
+      </div>
+    </div>
+  </div>
+
+  <a href="index.html" class="back-link" style="margin-top: 20px;">← Back to Work</a>
+
+</div>
+
+<!-- ═══════════════════════════════════════════════ -->
+<!-- FOOTER -->
+<!-- ═══════════════════════════════════════════════ -->
+<footer>
+  <p class="footer-headline">Thanks for stopping by</p>
+  <div class="footer-top">
+    <div>
+      <div class="footer-info">
+        <p>byhenrym@gmail.com</p>
+        <p>Designed, vibed, and coded by yours truly</p>
+        <p>© 2026 Henry Mierzwa</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:byhenrym@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/henmierz" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- ========== RESUME MODAL ========== -->
+<style>
+  .resume-overlay {
+    position: fixed; inset: 0; z-index: 9999;
+    display: flex; align-items: center; justify-content: center;
+    background: rgba(14, 14, 14, 0.45);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.35s ease, visibility 0.35s ease;
+  }
+  .resume-overlay.is-open {
+    opacity: 1;
+    visibility: visible;
+  }
+  .resume-modal {
+    position: relative;
+    background: var(--white, #FAFAFA);
+    border: 1px solid var(--blue, #1A6EFF);
+    border-radius: 16px;
+    padding: 48px 44px 40px;
+    max-width: 440px;
+    width: 90%;
+    text-align: center;
+    box-shadow: 0 0 24px rgba(26, 110, 255, 0.25), 0 0 60px rgba(26, 110, 255, 0.08);
+    transform: scale(0.92) translateY(16px);
+    opacity: 0;
+    transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), opacity 0.35s ease;
+  }
+  .resume-overlay.is-open .resume-modal {
+    transform: scale(1) translateY(0);
+    opacity: 1;
+  }
+  .resume-modal-close {
+    position: absolute; top: 16px; right: 18px;
+    background: none; border: none;
+    font-size: 22px; line-height: 1;
+    color: var(--gray, #6B6B6B);
+    cursor: pointer; transition: color 0.2s;
+    font-family: 'DM Sans', sans-serif;
+  }
+  .resume-modal-close:hover { color: var(--black, #0E0E0E); }
+  .resume-modal h2 {
+    font-family: 'Space Grotesk', sans-serif;
+    font-weight: 700;
+    font-size: 26px;
+    letter-spacing: -0.03em;
+    color: var(--black, #0E0E0E);
+    margin-bottom: 14px;
+  }
+  .resume-modal p {
+    font-family: 'DM Sans', sans-serif;
+    font-size: 15px;
+    line-height: 1.7;
+    color: var(--gray, #6B6B6B);
+    margin-bottom: 32px;
+  }
+  .resume-modal-btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    font-family: 'Syne', sans-serif; font-weight: 700;
+    font-size: 13px; letter-spacing: 0.08em; text-transform: uppercase;
+    color: white; background: var(--blue, #1A6EFF);
+    border: none; border-radius: 100px;
+    padding: 14px 32px;
+    text-decoration: none;
+    transition: background 0.25s ease, box-shadow 0.25s ease;
+    cursor: pointer;
+  }
+  .resume-modal-btn:hover {
+    background: var(--blue-dark, #0A4FCC);
+    box-shadow: 0 4px 20px rgba(26, 110, 255, 0.35);
+  }
+</style>
+
+<div class="resume-overlay" id="resumeOverlay">
+  <div class="resume-modal">
+    <button class="resume-modal-close" onclick="closeResumeModal()" aria-label="Close">&times;</button>
+    <h2>Resume</h2>
+    <p>To respect confidentiality, my resume is shared on a personal basis. Feel free to reach out and I'll be happy to send it your way!</p>
+    <a class="resume-modal-btn" href="mailto:byhenrym@gmail.com?subject=Resume%20Inquiry">Contact Me &rarr;</a>
+  </div>
+</div>
+
+<script>
+  function openResumeModal(e) {
+    if (e) e.preventDefault();
+    document.getElementById('resumeOverlay').classList.add('is-open');
+    document.body.style.overflow = 'hidden';
+  }
+  function closeResumeModal() {
+    document.getElementById('resumeOverlay').classList.remove('is-open');
+    document.body.style.overflow = '';
+  }
+  document.getElementById('resumeOverlay').addEventListener('click', function(e) {
+    if (e.target === this) closeResumeModal();
+  });
+  document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeResumeModal();
+  });
+</script>
+<!-- ========== END RESUME MODAL ========== -->
+
+<script>
+  const nav = document.getElementById('navbar');
+  window.addEventListener('scroll', () => nav.classList.toggle('scrolled', window.scrollY > 20));
+
+  const observer = new IntersectionObserver((entries) => {
+    entries.forEach(entry => {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('visible');
+      }
+    });
+  }, { threshold: 0.1 });
+
+  document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+</script>
+
+</body>
+</html>

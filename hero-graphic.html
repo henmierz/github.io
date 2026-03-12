@@ -1,0 +1,815 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Animated Hero Graphic</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Outfit:wght@300;500;700;900&display=swap');
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: transparent;
+    display: flex; align-items: center; justify-content: center;
+    min-height: 100vh; overflow: hidden;
+    font-family: 'Outfit', sans-serif;
+  }
+
+  .scene { width: 580px; height: 580px; position: relative; }
+
+  /* === LIGHTER PLATFORM === */
+  .platform {
+    position: absolute;
+    width: 520px; height: 520px;
+    left: 30px; top: 30px;
+    background: linear-gradient(180deg, #1c2a62 0%, #182358 40%, #152050 100%);
+    border-radius: 32px;
+    box-shadow:
+      0 8px 0 #111a40,
+      0 16px 0 #0e1535,
+      0 30px 80px rgba(0,0,0,0.5),
+      inset 0 1px 0 rgba(100, 150, 255, 0.14);
+    animation: platformFloat 6s ease-in-out infinite;
+    overflow: hidden;
+  }
+  .platform::after {
+    content: '';
+    position: absolute; inset: 1px;
+    border-radius: 31px;
+    border: 1px solid rgba(90, 140, 255, 0.1);
+    pointer-events: none; z-index: 10;
+  }
+
+  /* Chicago skyline — more visible */
+  .skyline-bg {
+    position: absolute; inset: 0;
+    border-radius: 32px; overflow: hidden;
+    opacity: 0.16;
+    filter: blur(1px);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 85%);
+    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 85%);
+  }
+  .skyline-bg svg { position: absolute; bottom: 0; left: 0; width: 100%; height: 100%; }
+
+  .grid {
+    position: absolute; inset: 0;
+    border-radius: 32px; overflow: hidden;
+    opacity: 0.03;
+    background-image:
+      linear-gradient(rgba(130,180,255,0.5) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(130,180,255,0.5) 1px, transparent 1px);
+    background-size: 32px 32px; z-index: 1;
+  }
+
+  @keyframes platformFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-5px); } }
+
+  /* Glows */
+  .glow { position: absolute; border-radius: 50%; filter: blur(50px); pointer-events: none; z-index: 0; }
+  .glow-1 { width: 220px; height: 220px; background: #2a55dd; opacity: 0.1; left: 30px; top: 50px; }
+  .glow-2 { width: 180px; height: 180px; background: #3366ff; opacity: 0.07; left: 300px; top: 280px; }
+  .glow-3 { width: 160px; height: 160px; background: #1a44dd; opacity: 0.08; left: 180px; top: 140px; }
+
+  /* Particles */
+  .particle { position: absolute; border-radius: 50%; animation: particleDrift linear infinite; opacity: 0; z-index: 2; }
+  .particle:nth-child(1) { width: 3px; height: 3px; background: #5599ff; left: 100px; top: 140px; animation-delay: 0s; animation-duration: 8s; }
+  .particle:nth-child(2) { width: 3px; height: 3px; background: #fff; left: 340px; top: 230px; animation-delay: 2s; animation-duration: 10s; }
+  .particle:nth-child(3) { width: 3px; height: 3px; background: #7799ff; left: 190px; top: 380px; animation-delay: 4s; animation-duration: 7s; }
+  .particle:nth-child(4) { width: 2px; height: 2px; background: #4477ff; left: 430px; top: 160px; animation-delay: 1s; animation-duration: 9s; }
+  .particle:nth-child(5) { width: 3px; height: 3px; background: #fff; left: 270px; top: 320px; animation-delay: 3s; animation-duration: 11s; }
+  .particle:nth-child(6) { width: 2px; height: 2px; background: #5599ff; left: 410px; top: 100px; animation-delay: 5s; animation-duration: 6s; }
+  @keyframes particleDrift { 0% { transform: translateY(0); opacity: 0; } 10% { opacity: 0.6; } 90% { opacity: 0.6; } 100% { transform: translateY(-80px); opacity: 0; } }
+
+  /* Stars */
+  .star { position: absolute; animation: starTwinkle 3s ease-in-out infinite; z-index: 3; }
+  .star svg { filter: drop-shadow(0 0 4px rgba(255,255,255,0.5)); }
+  .star-1 { left: 80px; top: 55px; } .star-2 { left: 470px; top: 70px; animation-delay: 1s; }
+  .star-3 { left: 500px; top: 170px; animation-delay: 2s; } .star-4 { left: 65px; top: 450px; animation-delay: 0.5s; }
+  .star-5 { left: 290px; top: 500px; animation-delay: 1.5s; }
+  @keyframes starTwinkle { 0%, 100% { transform: scale(1); opacity: 0.5; } 50% { transform: scale(1.3); opacity: 1; } }
+
+  /* Items container */
+  .items { position: absolute; left: 50px; top: 50px; width: 480px; height: 480px; z-index: 5; }
+
+  /* ============================================ */
+  /* DESK + MONITOR                               */
+  /* ============================================ */
+  .desk { position: absolute; left: 5px; top: 55px; }
+  .desk-surface {
+    width: 190px; height: 13px;
+    background: linear-gradient(180deg, #243270, #1c2a60);
+    border-radius: 5px; position: relative;
+    box-shadow: 0 3px 0 #141e48, 0 0 12px rgba(50,90,230,0.1);
+    border: 1px solid rgba(80,130,255,0.12);
+  }
+  .desk-legs { position: absolute; top: 13px; left: 12px; right: 12px; height: 55px; }
+  .d-leg { position: absolute; width: 5px; height: 55px; background: linear-gradient(180deg, #1e2d58, #162048); border-radius: 2px; }
+  .d-leg:nth-child(1) { left: 0; } .d-leg:nth-child(2) { right: 0; }
+
+  .monitor { position: absolute; left: 18px; top: -98px; }
+  .monitor-frame {
+    width: 152px; height: 90px;
+    background: #0c1430;
+    border-radius: 7px; border: 2px solid #243270;
+    overflow: hidden; position: relative;
+    box-shadow: 0 0 25px rgba(50,90,255,0.15);
+    animation: monitorGlow 4s ease-in-out infinite;
+  }
+  @keyframes monitorGlow { 0%, 100% { box-shadow: 0 0 20px rgba(50,90,255,0.1); } 50% { box-shadow: 0 0 35px rgba(50,90,255,0.22); } }
+
+  .chart-bars { display: flex; align-items: flex-end; gap: 4px; padding: 16px 9px 9px; height: 100%; }
+  .chart-bar { flex: 1; border-radius: 2px 2px 0 0; animation: barGrow 2s ease-in-out infinite alternate; }
+  .chart-bar:nth-child(1) { background: #2255ee; height: 30%; animation-delay: 0s; }
+  .chart-bar:nth-child(2) { background: #3366ff; height: 55%; animation-delay: 0.15s; }
+  .chart-bar:nth-child(3) { background: #1a44dd; height: 40%; animation-delay: 0.3s; }
+  .chart-bar:nth-child(4) { background: #4488ff; height: 70%; animation-delay: 0.45s; }
+  .chart-bar:nth-child(5) { background: #2255ee; height: 85%; animation-delay: 0.6s; }
+  .chart-bar:nth-child(6) { background: #5599ff; height: 60%; animation-delay: 0.75s; }
+  .chart-bar:nth-child(7) { background: #1a44dd; height: 45%; animation-delay: 0.9s; }
+  .chart-bar:nth-child(8) { background: #3366ff; height: 90%; animation-delay: 1.05s; }
+  .chart-bar:nth-child(9) { background: #4488ff; height: 50%; animation-delay: 1.2s; }
+  @keyframes barGrow { 0% { transform: scaleY(0.4); } 100% { transform: scaleY(1); } }
+
+  .trend-line { position: absolute; top: 8px; left: 7px; width: 134px; height: 42px; }
+  .trend-line svg { width: 100%; height: 100%; }
+  .trend-path { fill: none; stroke: #fff; stroke-width: 2; stroke-dasharray: 200; stroke-dashoffset: 200; animation: drawLine 3s ease-in-out infinite; filter: drop-shadow(0 0 5px rgba(255,255,255,0.4)); }
+  @keyframes drawLine { 0% { stroke-dashoffset: 200; } 50% { stroke-dashoffset: 0; } 100% { stroke-dashoffset: -200; } }
+
+  .monitor-stand { width: 34px; height: 9px; background: #243270; margin: 0 auto; border-radius: 0 0 3px 3px; }
+  .monitor-base { width: 50px; height: 4px; background: #243270; margin: 0 auto; border-radius: 3px; }
+
+  .metric-float { position: absolute; animation: metricFloat 3s ease-in-out infinite; }
+  .metric-float svg { filter: drop-shadow(0 0 5px rgba(70,120,255,0.4)); }
+  .metric-1 { left: -8px; top: -118px; } .metric-2 { left: 68px; top: -132px; animation-delay: 0.5s; } .metric-3 { left: 160px; top: -114px; animation-delay: 1s; }
+  @keyframes metricFloat { 0%, 100% { transform: translateY(0); opacity: 1; } 50% { transform: translateY(-9px); opacity: 0.7; } }
+
+  /* ============================================ */
+  /* PHONE                                        */
+  /* ============================================ */
+  .phone-wrap { position: absolute; left: 230px; top: 20px; animation: phoneFloat 5s ease-in-out infinite; }
+  @keyframes phoneFloat { 0%, 100% { transform: translateY(0) rotate(-3deg); } 50% { transform: translateY(-8px) rotate(-1deg); } }
+  .phone-body { width: 60px; height: 118px; background: linear-gradient(180deg, #1c2a62 0%, #142048 100%); border-radius: 13px; border: 2px solid #243270; overflow: hidden; position: relative; box-shadow: 0 6px 25px rgba(0,0,0,0.3), 0 0 18px rgba(50,90,255,0.1); }
+  .phone-notch { width: 24px; height: 5px; background: #142048; border-radius: 0 0 5px 5px; margin: 0 auto; z-index: 2; position: relative; }
+  .phone-screen { margin: 3px 4px; width: 48px; height: 98px; border-radius: 7px; background: #0a1228; overflow: hidden; position: relative; }
+  .social-feed { position: absolute; top: 0; left: 0; width: 100%; animation: scrollFeed 8s linear infinite; }
+  .feed-item { width: 38px; height: 18px; margin: 3px 5px; border-radius: 3px; opacity: 0.85; }
+  .feed-item:nth-child(odd) { background: linear-gradient(135deg, #2855cc, #3060ee); }
+  .feed-item:nth-child(even) { background: linear-gradient(135deg, #2040aa, #1a38bb); }
+  .feed-item:nth-child(3n) { background: linear-gradient(135deg, #3366ff, #4488ff); height: 26px; }
+  @keyframes scrollFeed { 0% { transform: translateY(0); } 100% { transform: translateY(-140px); } }
+
+  .notif { position: absolute; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 9px; font-weight: 700; color: white; animation: notifPop 2s ease-in-out infinite; z-index: 5; }
+  .notif-heart { width: 25px; height: 25px; background: linear-gradient(135deg, #1a3aff, #0022cc); top: -6px; right: -13px; box-shadow: 0 0 16px rgba(30,60,255,0.5); }
+  .notif-comment { width: 22px; height: 22px; background: linear-gradient(135deg, #3366ff, #2255ee); top: 26px; right: -16px; animation-delay: 0.7s; box-shadow: 0 0 14px rgba(50,100,255,0.5); }
+  .notif-share { width: 20px; height: 20px; background: #fff; color: #1a3aff; top: 55px; right: -10px; animation-delay: 1.4s; box-shadow: 0 0 14px rgba(255,255,255,0.3); }
+  @keyframes notifPop { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.2); } }
+
+  .reaction { position: absolute; font-size: 12px; animation: reactionFloat 4s ease-out infinite; opacity: 0; }
+  .reaction:nth-child(1) { left: -16px; top: 6px; } .reaction:nth-child(2) { left: 62px; top: 30px; animation-delay: 1.3s; } .reaction:nth-child(3) { left: 20px; top: -10px; animation-delay: 2.6s; }
+  @keyframes reactionFloat { 0% { opacity: 0; transform: translateY(8px); } 20% { opacity: 1; } 80% { opacity: 1; } 100% { opacity: 0; transform: translateY(-40px); } }
+
+  /* ============================================ */
+  /* TURNTABLE                                    */
+  /* ============================================ */
+  .turntable-wrap { position: absolute; left: 0px; top: 210px; }
+  .turntable-base { width: 165px; height: 102px; background: linear-gradient(180deg, #1a2348 0%, #121a38 100%); border-radius: 9px; border: 1px solid #243270; position: relative; overflow: hidden; box-shadow: 0 5px 18px rgba(0,0,0,0.3); }
+  .vinyl { position: absolute; width: 74px; height: 74px; left: 8px; top: 14px; border-radius: 50%; background: radial-gradient(circle at center, #2a2a44 7px, transparent 7px), radial-gradient(circle at center, #18182a 9px, transparent 9px), repeating-radial-gradient(circle at center, transparent 11px, rgba(255,255,255,0.03) 12px, transparent 13px), conic-gradient(from 0deg, #10101a, #1a1a2a, #10101a, #1a1a2a, #10101a); animation: spin 2s linear infinite; box-shadow: 0 0 18px rgba(50,80,255,0.1); }
+  .vinyl-label { position: absolute; width: 20px; height: 20px; left: 50%; top: 50%; transform: translate(-50%,-50%); border-radius: 50%; background: linear-gradient(135deg, #2244cc, #3366ff); }
+  .vinyl-dot { position: absolute; width: 5px; height: 5px; left: 50%; top: 50%; transform: translate(-50%,-50%); border-radius: 50%; background: #121a38; }
+  @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+
+  .tonearm { position: absolute; right: 20px; top: 9px; width: 3px; height: 48px; background: linear-gradient(180deg, #8899bb, #556688); border-radius: 2px; transform-origin: top center; animation: tonearmSwing 8s ease-in-out infinite; }
+  .tonearm::before { content: ''; position: absolute; top: -3px; left: -3px; width: 9px; height: 9px; background: #667799; border-radius: 50%; }
+  .tonearm::after { content: ''; position: absolute; bottom: -2px; left: -3px; width: 9px; height: 5px; background: #8899bb; border-radius: 2px; }
+  @keyframes tonearmSwing { 0%, 100% { transform: rotate(-15deg); } 50% { transform: rotate(-5deg); } }
+
+  .mixer { position: absolute; right: 9px; bottom: 7px; display: flex; gap: 3px; }
+  .slider-track { width: 5px; height: 28px; background: #0c1225; border-radius: 3px; position: relative; overflow: hidden; border: 1px solid #1e2a50; }
+  .slider-fill { position: absolute; bottom: 0; width: 100%; border-radius: 2px; animation: sliderBounce 1.5s ease-in-out infinite; }
+  .slider-track:nth-child(1) .slider-fill { height: 60%; background: #2255ee; } .slider-track:nth-child(2) .slider-fill { height: 80%; background: #3366ff; animation-delay: 0.2s; } .slider-track:nth-child(3) .slider-fill { height: 45%; background: #4488ff; animation-delay: 0.4s; } .slider-track:nth-child(4) .slider-fill { height: 70%; background: #fff; animation-delay: 0.6s; }
+  @keyframes sliderBounce { 0%, 100% { transform: scaleY(1); } 50% { transform: scaleY(0.5); } }
+
+  .sound-waves { position: absolute; left: 30px; top: -26px; display: flex; gap: 3px; align-items: center; }
+  .wave-bar { width: 3px; border-radius: 2px; animation: waveBar 0.8s ease-in-out infinite alternate; }
+  .wave-bar:nth-child(1) { height: 10px; background: #2255ee; } .wave-bar:nth-child(2) { height: 18px; background: #3366ff; animation-delay: 0.1s; } .wave-bar:nth-child(3) { height: 25px; background: #5599ff; animation-delay: 0.2s; } .wave-bar:nth-child(4) { height: 14px; background: #fff; animation-delay: 0.3s; } .wave-bar:nth-child(5) { height: 22px; background: #3366ff; animation-delay: 0.4s; } .wave-bar:nth-child(6) { height: 12px; background: #2255ee; animation-delay: 0.5s; } .wave-bar:nth-child(7) { height: 20px; background: #5599ff; animation-delay: 0.6s; } .wave-bar:nth-child(8) { height: 9px; background: #fff; animation-delay: 0.7s; }
+  @keyframes waveBar { 0% { transform: scaleY(0.3); } 100% { transform: scaleY(1); } }
+
+  /* ============================================ */
+  /* AIRPODS MAX                                  */
+  /* ============================================ */
+  .airpods-max { position: absolute; left: 185px; top: 180px; animation: hpFloat 5s ease-in-out infinite; animation-delay: 1.5s; }
+  @keyframes hpFloat { 0%, 100% { transform: translateY(0) rotate(8deg); } 50% { transform: translateY(-7px) rotate(10deg); } }
+  .apm-headband { width: 62px; height: 22px; border-radius: 31px 31px 0 0; position: relative; }
+  .apm-headband-mesh { width: 62px; height: 22px; border-radius: 31px 31px 0 0; background: linear-gradient(180deg, #c8ccd5, #b0b5c0); }
+  .apm-headband-mesh::after { content: ''; position: absolute; inset: 3px 7px; border-radius: 26px 26px 0 0; background: repeating-linear-gradient(90deg, transparent, transparent 2px, rgba(0,0,0,0.06) 2px, rgba(0,0,0,0.06) 3px); }
+  .apm-frame-l, .apm-frame-r { position: absolute; width: 3px; height: 38px; background: linear-gradient(180deg, #b0b5c0, #9ca0aa); border-radius: 2px; top: 16px; }
+  .apm-frame-l { left: 3px; } .apm-frame-r { right: 3px; }
+  .apm-cup { position: absolute; width: 26px; height: 32px; background: linear-gradient(180deg, #d4d8e0, #bcc0ca); border-radius: 7px; top: 42px; box-shadow: 0 2px 7px rgba(0,0,0,0.2), inset 0 1px 0 rgba(255,255,255,0.5); }
+  .apm-cup::after { content: ''; position: absolute; width: 18px; height: 22px; left: 50%; top: 50%; transform: translate(-50%,-50%); border-radius: 4px; background: radial-gradient(ellipse, #a8acb8, #9498a5); border: 1px solid rgba(255,255,255,0.15); }
+  .apm-cup-l { left: -4px; } .apm-cup-r { right: -4px; }
+  .apm-crown { position: absolute; width: 7px; height: 7px; background: #9498a5; border-radius: 50%; right: -8px; top: 48px; border: 1px solid #b0b5c0; }
+
+  /* ============================================ */
+  /* XBOX 360 CONTROLLER (white/blue brand)       */
+  /* ============================================ */
+  .xbox-wrap {
+    position: absolute;
+    left: 300px; top: 240px;
+    animation: xboxFloat 4.8s ease-in-out infinite;
+    animation-delay: 0.8s;
+  }
+  @keyframes xboxFloat { 0%, 100% { transform: translateY(0) rotate(-4deg); } 50% { transform: translateY(-8px) rotate(-2deg); } }
+
+  .xbox-controller { width: 100px; height: 68px; position: relative; }
+
+  /* Center body — rounded 360 shape */
+  .xbox-body {
+    position: absolute;
+    width: 56px; height: 34px;
+    left: 22px; top: 8px;
+    background: linear-gradient(180deg, #e8ecf5 0%, #d8dde8 60%, #c8cdd8 100%);
+    border-radius: 10px 10px 18px 18px;
+    box-shadow: 0 3px 12px rgba(0,0,0,0.25), 0 0 18px rgba(50,90,255,0.08);
+    border: 1px solid rgba(255,255,255,0.3);
+  }
+
+  /* Top ridge/battery bump */
+  .xbox-top-ridge {
+    position: absolute;
+    width: 30px; height: 8px;
+    left: 35px; top: 4px;
+    background: linear-gradient(180deg, #dde0ea, #d0d4e0);
+    border-radius: 6px 6px 0 0;
+    border: 1px solid rgba(255,255,255,0.2);
+    border-bottom: none;
+  }
+
+  /* Grips — curved 360 style */
+  .xbox-grip-l, .xbox-grip-r {
+    position: absolute;
+    width: 26px; height: 36px;
+    background: linear-gradient(180deg, #e0e4ee 0%, #ccd0da 50%, #b8bcc8 100%);
+    bottom: -6px;
+    border: 1px solid rgba(255,255,255,0.2);
+  }
+  .xbox-grip-l {
+    left: 2px;
+    border-radius: 14px 6px 16px 14px;
+    transform: rotate(14deg);
+  }
+  .xbox-grip-r {
+    right: 2px;
+    border-radius: 6px 14px 14px 16px;
+    transform: rotate(-14deg);
+  }
+
+  /* Gray bottom accent */
+  .xbox-bottom {
+    position: absolute;
+    width: 56px; height: 8px;
+    left: 22px; bottom: 2px;
+    background: linear-gradient(180deg, #a0a5b2, #8a8f9c);
+    border-radius: 0 0 18px 18px;
+  }
+
+  /* Bumpers */
+  .xbox-bumper-l, .xbox-bumper-r {
+    position: absolute;
+    width: 22px; height: 7px;
+    background: linear-gradient(180deg, #d8dce5, #c8ccd8);
+    top: 4px;
+    border-radius: 4px 4px 0 0;
+    border: 1px solid rgba(255,255,255,0.15);
+    border-bottom: none;
+  }
+  .xbox-bumper-l { left: 18px; }
+  .xbox-bumper-r { right: 18px; }
+
+  /* Left thumbstick (gray, raised) */
+  .xbox-stick-l {
+    position: absolute;
+    width: 13px; height: 13px;
+    background: radial-gradient(circle at 40% 35%, #b0b5c0, #8a8f9c);
+    border-radius: 50%;
+    left: 28px; top: 14px;
+    border: 1px solid #c0c5d0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.15);
+  }
+  /* Stick dots */
+  .xbox-stick-l::after {
+    content: '';
+    position: absolute;
+    width: 3px; height: 3px;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    border-radius: 50%;
+    background: rgba(0,0,0,0.1);
+  }
+
+  /* D-pad (metallic cross) */
+  .xbox-dpad {
+    position: absolute;
+    left: 30px; top: 30px;
+    width: 14px; height: 14px;
+  }
+  .dpad-h { position: absolute; width: 14px; height: 5px; top: 4.5px; left: 0; background: linear-gradient(180deg, #bcc0cc, #a0a4b0); border-radius: 1.5px; border: 0.5px solid #d0d4e0; }
+  .dpad-v { position: absolute; width: 5px; height: 14px; top: 0; left: 4.5px; background: linear-gradient(90deg, #bcc0cc, #a0a4b0); border-radius: 1.5px; border: 0.5px solid #d0d4e0; }
+
+  /* Xbox Guide button (center, green ring) */
+  .xbox-guide {
+    position: absolute;
+    width: 12px; height: 12px;
+    left: 50%; top: 14px;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, #e8ecf0 40%, #d0d4dd 100%);
+    border-radius: 50%;
+    border: 2px solid #55aa44;
+    box-shadow: 0 0 8px rgba(85,170,68,0.4);
+    animation: guidePulse 2.5s ease-in-out infinite;
+  }
+  .xbox-guide::after {
+    content: '';
+    position: absolute;
+    width: 4px; height: 4px;
+    left: 50%; top: 50%; transform: translate(-50%,-50%);
+    background: #55aa44;
+    border-radius: 50%;
+  }
+  @keyframes guidePulse { 0%, 100% { box-shadow: 0 0 6px rgba(85,170,68,0.3); } 50% { box-shadow: 0 0 14px rgba(85,170,68,0.6); } }
+
+  /* Back / Start buttons */
+  .xbox-small-btn {
+    position: absolute;
+    width: 6px; height: 4px;
+    background: #c0c5d0;
+    border-radius: 2px;
+    top: 18px;
+  }
+  .xbox-back-btn { left: 42px; }
+  .xbox-start-btn { right: 38px; }
+
+  /* ABXY buttons (colored) */
+  .xbox-btns { position: absolute; right: 24px; top: 13px; width: 24px; height: 24px; }
+  .xbox-btn { position: absolute; width: 8px; height: 8px; border-radius: 50%; box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 1px 2px rgba(0,0,0,0.1); }
+  .xbox-btn-a { bottom: 0; left: 8px; background: radial-gradient(circle at 40% 35%, #44cc55, #228833); }
+  .xbox-btn-b { right: 0; top: 8px; background: radial-gradient(circle at 40% 35%, #ee3344, #cc1122); }
+  .xbox-btn-x { left: 0; top: 8px; background: radial-gradient(circle at 40% 35%, #3377ff, #1a44cc); }
+  .xbox-btn-y { top: 0; left: 8px; background: radial-gradient(circle at 40% 35%, #ffbb22, #dd9900); }
+
+  /* Right thumbstick */
+  .xbox-stick-r {
+    position: absolute;
+    width: 12px; height: 12px;
+    background: radial-gradient(circle at 40% 35%, #b0b5c0, #8a8f9c);
+    border-radius: 50%;
+    right: 28px; top: 30px;
+    border: 1px solid #c0c5d0;
+    box-shadow: inset 0 1px 2px rgba(0,0,0,0.2), 0 1px 3px rgba(0,0,0,0.15);
+  }
+
+  /* ============================================ */
+  /* NIKE VOMERO 18 RUNNING SHOES                 */
+  /* ============================================ */
+  .running-pair {
+    position: absolute;
+    left: 75px; top: 380px;
+  }
+  .run-shoe { position: absolute; width: 100px; height: 48px; }
+  .run-shoe-left { left: 0; top: 0; animation: runLeft 0.8s ease-in-out infinite; }
+  .run-shoe-right { left: 52px; top: -10px; animation: runRight 0.8s ease-in-out infinite; }
+  @keyframes runLeft {
+    0% { transform: translateX(0) translateY(0) rotate(-2deg); }
+    25% { transform: translateX(-10px) translateY(-20px) rotate(-22deg); }
+    50% { transform: translateX(7px) translateY(-6px) rotate(4deg); }
+    75% { transform: translateX(13px) translateY(0) rotate(2deg); }
+    100% { transform: translateX(0) translateY(0) rotate(-2deg); }
+  }
+  @keyframes runRight {
+    0% { transform: translateX(0) translateY(0) rotate(2deg); }
+    25% { transform: translateX(13px) translateY(0) rotate(2deg); }
+    50% { transform: translateX(-10px) translateY(-20px) rotate(-22deg); }
+    75% { transform: translateX(7px) translateY(-6px) rotate(4deg); }
+    100% { transform: translateX(0) translateY(0) rotate(2deg); }
+  }
+
+  /* Vomero 18 — chunky midsole, modern upper */
+  .vomero-upper {
+    width: 100px; height: 30px;
+    background: linear-gradient(135deg, #1a33bb 0%, #1a3aff 30%, #2855ee 60%, #3366ff 100%);
+    border-radius: 38px 16px 3px 14px;
+    position: relative;
+    box-shadow: 0 3px 12px rgba(30,60,255,0.3);
+    overflow: hidden;
+  }
+
+  /* Mesh texture overlay */
+  .vomero-upper::before {
+    content: '';
+    position: absolute; inset: 0;
+    background:
+      repeating-linear-gradient(60deg, transparent, transparent 3px, rgba(255,255,255,0.03) 3px, rgba(255,255,255,0.03) 4px),
+      repeating-linear-gradient(-60deg, transparent, transparent 3px, rgba(255,255,255,0.02) 3px, rgba(255,255,255,0.02) 4px);
+    border-radius: inherit;
+  }
+
+  /* Collar/heel counter */
+  .vomero-collar {
+    position: absolute;
+    left: 0; top: 2px;
+    width: 22px; height: 22px;
+    background: linear-gradient(135deg, #0022aa, #1a33cc);
+    border-radius: 50% 20% 10% 40%;
+  }
+
+  /* Swoosh */
+  .v-swoosh { position: absolute; top: 8px; left: 16px; width: 48px; height: 18px; }
+  .v-swoosh svg { width: 100%; height: 100%; }
+
+  /* Tongue */
+  .vomero-tongue {
+    position: absolute;
+    right: 16px; top: -4px;
+    width: 18px; height: 10px;
+    background: linear-gradient(180deg, #3366ff, #2855ee);
+    border-radius: 6px 6px 2px 2px;
+    border: 1px solid rgba(255,255,255,0.1);
+  }
+
+  /* Laces */
+  .v-laces { position: absolute; top: 1px; left: 42px; display: flex; gap: 5px; }
+  .v-lace { width: 2px; height: 10px; background: rgba(255,255,255,0.35); border-radius: 1px; transform: rotate(-8deg); }
+
+  /* Chunky ZoomX midsole */
+  .vomero-midsole {
+    position: absolute;
+    bottom: 4px; left: 0;
+    width: 98px; height: 16px;
+    background: linear-gradient(180deg, #f0f0f5 0%, #ffffff 40%, #e8e8ee 100%);
+    border-radius: 20px 12px 10px 16px;
+    box-shadow: 0 2px 0 #d0d0d8;
+    overflow: hidden;
+  }
+
+  /* Midsole detail lines */
+  .vomero-midsole::before {
+    content: '';
+    position: absolute;
+    top: 5px; left: 10px; right: 10px;
+    height: 1px;
+    background: rgba(0,0,0,0.05);
+  }
+
+  /* Zoom Air unit visible in heel */
+  .vomero-air {
+    position: absolute;
+    bottom: 3px; left: 8px;
+    width: 28px; height: 8px;
+    background: rgba(30,60,255,0.08);
+    border-radius: 5px;
+    border: 1px solid rgba(30,60,255,0.12);
+  }
+
+  /* Outsole */
+  .vomero-outsole {
+    position: absolute;
+    bottom: 0; left: 4px;
+    width: 90px; height: 5px;
+    background: linear-gradient(180deg, #2244cc, #1a33bb);
+    border-radius: 14px 8px 6px 12px;
+  }
+
+  /* Speed lines */
+  .speed-lines { position: absolute; left: 55px; top: 392px; pointer-events: none; }
+  .speed-line { position: absolute; height: 2px; border-radius: 1px; animation: speedLine 0.8s ease-out infinite; opacity: 0; }
+  .speed-line:nth-child(1) { width: 22px; top: 0; left: 0; background: linear-gradient(90deg, transparent, #3366ff); }
+  .speed-line:nth-child(2) { width: 30px; top: 8px; left: -8px; background: linear-gradient(90deg, transparent, #fff); animation-delay: 0.15s; }
+  .speed-line:nth-child(3) { width: 18px; top: 16px; left: -3px; background: linear-gradient(90deg, transparent, #5599ff); animation-delay: 0.3s; }
+  .speed-line:nth-child(4) { width: 26px; top: 24px; left: -12px; background: linear-gradient(90deg, transparent, #2255ee); animation-delay: 0.45s; }
+  @keyframes speedLine { 0% { opacity: 0; transform: translateX(18px); } 30% { opacity: 0.7; } 100% { opacity: 0; transform: translateX(-25px); } }
+
+  /* ============================================ */
+  /* GLOBE + AIRPLANE + PASSPORT                  */
+  /* ============================================ */
+  .globe-wrap { position: absolute; left: 330px; top: 120px; animation: globeFloat 5s ease-in-out infinite; animation-delay: 0.5s; }
+  @keyframes globeFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-9px); } }
+  .globe-sphere { width: 64px; height: 64px; border-radius: 50%; background: radial-gradient(circle at 28% 28%, rgba(110,160,255,0.2), transparent 50%), linear-gradient(135deg, #1a2d62, #142555 50%, #1e3368); position: relative; overflow: hidden; box-shadow: 0 0 28px rgba(50,90,255,0.22); border: 1px solid rgba(80,130,255,0.15); }
+  .continent { position: absolute; background: rgba(100,160,255,0.25); border-radius: 40%; animation: continentDrift 14s linear infinite; }
+  .continent:nth-child(1) { width: 16px; height: 20px; top: 9px; left: 11px; }
+  .continent:nth-child(2) { width: 11px; height: 13px; top: 24px; left: 36px; border-radius: 30% 50%; }
+  .continent:nth-child(3) { width: 18px; height: 9px; top: 17px; left: 49px; }
+  .continent:nth-child(4) { width: 9px; height: 11px; top: 38px; left: 18px; }
+  @keyframes continentDrift { 0% { transform: translateX(0); } 100% { transform: translateX(64px); } }
+  .globe-line { position: absolute; border: 1px solid rgba(255,255,255,0.05); border-radius: 50%; }
+  .globe-line-h { width: 58px; height: 18px; left: 3px; }
+  .globe-line-h:nth-child(5) { top: 11px; } .globe-line-h:nth-child(6) { top: 28px; }
+  .globe-line-v { width: 24px; height: 58px; top: 3px; }
+  .globe-line-v:nth-child(7) { left: 9px; } .globe-line-v:nth-child(8) { left: 26px; }
+
+  .airplane { position: absolute; left: 310px; top: 80px; animation: fly 8s ease-in-out infinite; }
+  .plane-body { width: 30px; height: 7px; background: linear-gradient(90deg, #e0e4f0, #ccd0dd); border-radius: 7px 4px 4px 7px; position: relative; }
+  .plane-wing { position: absolute; width: 16px; height: 4px; background: #b8bdd0; top: 2px; left: 7px; border-radius: 2px; transform: skewX(-15deg); }
+  .plane-tail { position: absolute; width: 7px; height: 9px; background: #b8bdd0; right: -1px; top: -5px; border-radius: 2px 2px 0 0; transform: skewX(15deg); }
+  .plane-trail { position: absolute; left: -35px; top: 3px; width: 32px; height: 2px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2)); border-radius: 1px; }
+  @keyframes fly { 0% { transform: translate(0,0) rotate(-5deg); } 25% { transform: translate(28px,-18px) rotate(0deg); } 50% { transform: translate(56px,0) rotate(5deg); } 75% { transform: translate(28px,18px) rotate(0deg); } 100% { transform: translate(0,0) rotate(-5deg); } }
+
+  .passport { position: absolute; left: 410px; top: 145px; transform: rotate(12deg); animation: passportFloat 6s ease-in-out infinite; animation-delay: 2s; }
+  @keyframes passportFloat { 0%, 100% { transform: rotate(12deg) translateY(0); } 50% { transform: rotate(14deg) translateY(-5px); } }
+  .passport-body { width: 32px; height: 43px; background: linear-gradient(180deg, #1a2d62, #142555); border-radius: 3px; border: 1px solid #2a3a78; display: flex; flex-direction: column; align-items: center; justify-content: center; box-shadow: 0 3px 10px rgba(0,0,0,0.3); gap: 3px; }
+  .passport-emblem { width: 14px; height: 14px; border: 1.5px solid rgba(210,210,225,0.3); border-radius: 50%; }
+  .passport-lines { display: flex; flex-direction: column; gap: 2px; align-items: center; }
+  .passport-lines span { display: block; height: 1.5px; background: rgba(210,210,225,0.2); border-radius: 1px; }
+  .passport-lines span:nth-child(1) { width: 15px; } .passport-lines span:nth-child(2) { width: 9px; }
+
+  /* ============================================ */
+  /* CELSIUS CAN — moved right near controller    */
+  /* ============================================ */
+  .celsius-wrap {
+    position: absolute;
+    left: 405px; top: 268px;
+    animation: canFloat 4.5s ease-in-out infinite;
+    animation-delay: 0.3s;
+  }
+  @keyframes canFloat { 0%, 100% { transform: translateY(0) rotate(5deg); } 50% { transform: translateY(-5px) rotate(3deg); } }
+  .can-body { width: 22px; height: 52px; background: linear-gradient(180deg, #b8bdd0 0%, #ccd0dd 6%, #ccd0dd 9%, #0d1a55 9%, #1533aa 22%, #1a3aff 42%, #2255ee 58%, #0d1a55 72%, #ccd0dd 72%, #b8bdd0 100%); border-radius: 4px 4px 3px 3px; position: relative; overflow: hidden; box-shadow: 0 3px 10px rgba(0,0,0,0.2), inset 2px 0 3px rgba(255,255,255,0.08); }
+  .can-top { position: absolute; top: -2px; left: 2px; width: 18px; height: 3px; background: linear-gradient(180deg, #aaa, #999); border-radius: 2px; }
+  .can-logo { position: absolute; top: 16px; left: 50%; transform: translateX(-50%); width: 12px; height: 12px; border: 2px solid #fff; border-radius: 50%; border-right-color: transparent; }
+  .can-drop { position: absolute; background: rgba(255,255,255,0.2); border-radius: 50% 50% 50% 50% / 60% 60% 40% 40%; animation: dropSlide 4s ease-in infinite; }
+  .can-drop:nth-child(1) { width: 2px; height: 3px; left: 3px; top: 16px; } .can-drop:nth-child(2) { width: 2px; height: 3px; left: 15px; top: 24px; animation-delay: 1.5s; } .can-drop:nth-child(3) { width: 1.5px; height: 2px; left: 8px; top: 32px; animation-delay: 3s; }
+  @keyframes dropSlide { 0% { transform: translateY(0); opacity: 0.4; } 100% { transform: translateY(12px); opacity: 0; } }
+
+  /* ============================================ */
+  /* DACHSHUND — bigger, lower                    */
+  /* ============================================ */
+  .dachshund-wrap {
+    position: absolute;
+    left: 280px; top: 390px;
+    animation: dogWalk 1.2s ease-in-out infinite;
+    transform: scale(1.4);
+    transform-origin: center center;
+  }
+  @keyframes dogWalk { 0%, 100% { transform: scale(1.4) translateX(0) translateY(0); } 25% { transform: scale(1.4) translateX(3px) translateY(-2px); } 50% { transform: scale(1.4) translateX(0) translateY(0); } 75% { transform: scale(1.4) translateX(-2px) translateY(-1px); } }
+
+  .dachshund { width: 70px; height: 35px; position: relative; }
+  .dog-body { position: absolute; width: 42px; height: 14px; background: linear-gradient(180deg, #5a3520, #442810); border-radius: 7px; left: 12px; top: 8px; box-shadow: 0 2px 6px rgba(0,0,0,0.3); }
+  .dog-head { position: absolute; width: 16px; height: 13px; background: linear-gradient(135deg, #5a3520, #4a2d18); border-radius: 6px 10px 5px 5px; right: -4px; top: 4px; }
+  .dog-snout { position: absolute; width: 10px; height: 7px; background: linear-gradient(180deg, #4a2d18, #3d2414); border-radius: 3px 6px 4px 4px; right: -8px; top: 8px; }
+  .dog-nose { position: absolute; width: 4px; height: 3px; background: #111; border-radius: 50%; right: -10px; top: 9px; }
+  .dog-eye { position: absolute; width: 3px; height: 3px; background: #111; border-radius: 50%; right: 0px; top: 6px; }
+  .dog-eye-shine { position: absolute; width: 1px; height: 1px; background: #fff; border-radius: 50%; right: 1px; top: 6px; }
+  .dog-ear { position: absolute; width: 8px; height: 10px; background: #3d2414; border-radius: 3px 3px 5px 5px; right: -1px; top: 1px; transform: rotate(15deg); transform-origin: top center; animation: earFlop 1.2s ease-in-out infinite; }
+  @keyframes earFlop { 0%, 100% { transform: rotate(15deg); } 50% { transform: rotate(20deg); } }
+
+  .dog-leg { position: absolute; width: 4px; height: 12px; background: linear-gradient(180deg, #4a2d18, #3d2414); border-radius: 2px; bottom: -8px; }
+  .dog-leg-fl { left: 36px; animation: legFront 0.6s ease-in-out infinite; }
+  .dog-leg-fr { left: 42px; animation: legFront 0.6s ease-in-out infinite 0.3s; }
+  .dog-leg-bl { left: 14px; animation: legBack 0.6s ease-in-out infinite; }
+  .dog-leg-br { left: 20px; animation: legBack 0.6s ease-in-out infinite 0.3s; }
+  @keyframes legFront { 0%, 100% { transform: rotate(-12deg); } 50% { transform: rotate(12deg); } }
+  @keyframes legBack { 0%, 100% { transform: rotate(12deg); } 50% { transform: rotate(-12deg); } }
+
+  .dog-tail { position: absolute; width: 8px; height: 3px; background: #4a2d18; border-radius: 2px; left: 7px; top: 8px; transform-origin: right center; animation: tailWag 0.5s ease-in-out infinite alternate; }
+  @keyframes tailWag { 0% { transform: rotate(-15deg); } 100% { transform: rotate(15deg); } }
+
+  .dog-leash { position: absolute; right: -2px; top: 4px; width: 50px; height: 30px; pointer-events: none; }
+  .dog-leash svg { width: 100%; height: 100%; overflow: visible; }
+  .leash-path { fill: none; stroke: #5599ff; stroke-width: 1.5; stroke-linecap: round; filter: drop-shadow(0 0 3px rgba(85,153,255,0.3)); }
+  .leash-handle { position: absolute; right: -52px; top: -22px; width: 10px; height: 14px; border: 2px solid #5599ff; border-radius: 3px; animation: handleFloat 1.2s ease-in-out infinite; }
+  @keyframes handleFloat { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-2px); } }
+</style>
+</head>
+<body>
+<div class="scene">
+  <div class="glow glow-1"></div><div class="glow glow-2"></div><div class="glow glow-3"></div>
+
+  <div class="platform">
+    <div class="skyline-bg">
+      <svg viewBox="0 0 520 520" preserveAspectRatio="xMidYMax slice">
+        <defs>
+          <linearGradient id="skyG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#2244cc" stop-opacity="0.12"/><stop offset="55%" stop-color="#2244cc" stop-opacity="0.22"/><stop offset="100%" stop-color="#0f1e48" stop-opacity="0.08"/></linearGradient>
+          <linearGradient id="waterG" x1="0" y1="0" x2="0" y2="1"><stop offset="0%" stop-color="#0f1e48" stop-opacity="0.35"/><stop offset="100%" stop-color="#0a1230" stop-opacity="0.15"/></linearGradient>
+        </defs>
+        <rect width="520" height="520" fill="url(#skyG)"/>
+        <rect y="365" width="520" height="155" fill="url(#waterG)"/>
+        <!-- Water ripples -->
+        <g opacity="0.18">
+          <line x1="0" y1="380" x2="520" y2="380" stroke="#5599ff" stroke-width="0.6"/>
+          <line x1="20" y1="395" x2="500" y2="395" stroke="#3366ff" stroke-width="0.5"/>
+          <line x1="40" y1="415" x2="480" y2="415" stroke="#2255ee" stroke-width="0.4"/>
+          <line x1="60" y1="440" x2="460" y2="440" stroke="#3366ff" stroke-width="0.3"/>
+          <line x1="30" y1="465" x2="490" y2="465" stroke="#2255ee" stroke-width="0.3"/>
+        </g>
+        <!-- Far left -->
+        <rect x="5" y="275" width="18" height="90" fill="#3a66ee" rx="1"/>
+        <rect x="28" y="255" width="22" height="110" fill="#2855dd" rx="1"/>
+        <rect x="55" y="285" width="16" height="80" fill="#4a88ff" rx="1"/>
+        <!-- Willis/Sears Tower -->
+        <rect x="78" y="155" width="16" height="210" fill="#4a88ff" rx="1"/>
+        <rect x="94" y="145" width="20" height="220" fill="#3a66ee" rx="1"/>
+        <rect x="114" y="160" width="14" height="205" fill="#4a88ff" rx="1"/>
+        <rect x="99" y="88" width="2.5" height="57" fill="#5a99ff"/>
+        <rect x="108" y="105" width="2" height="40" fill="#5a99ff"/>
+        <!-- 311 S Wacker -->
+        <rect x="136" y="185" width="20" height="180" fill="#2855dd" rx="1"/>
+        <rect x="141" y="180" width="10" height="5" fill="#3a66ee"/>
+        <!-- Chase Tower -->
+        <rect x="163" y="190" width="18" height="175" fill="#5a99ff" rx="1"/>
+        <!-- Two Pru -->
+        <rect x="188" y="175" width="16" height="190" fill="#3a66ee" rx="1"/>
+        <rect x="192" y="167" width="8" height="8" fill="#3a66ee"/>
+        <!-- Aon Center -->
+        <rect x="212" y="165" width="22" height="200" fill="#4a88ff" rx="1"/>
+        <!-- Trump Tower -->
+        <rect x="242" y="170" width="18" height="195" fill="#5a99ff" rx="1"/>
+        <rect x="246" y="153" width="10" height="17" fill="#5a99ff" rx="1"/>
+        <rect x="249" y="143" width="4" height="10" fill="#5a99ff"/>
+        <!-- Hancock Center -->
+        <rect x="268" y="125" width="26" height="240" fill="#2855dd" rx="1"/>
+        <rect x="276" y="82" width="2.5" height="43" fill="#4a88ff"/>
+        <rect x="286" y="90" width="2" height="35" fill="#4a88ff"/>
+        <!-- X-bracing -->
+        <line x1="270" y1="175" x2="292" y2="255" stroke="#3a66ee" stroke-width="1" opacity="0.3"/>
+        <line x1="292" y1="175" x2="270" y2="255" stroke="#3a66ee" stroke-width="1" opacity="0.3"/>
+        <line x1="270" y1="255" x2="292" y2="330" stroke="#3a66ee" stroke-width="1" opacity="0.3"/>
+        <line x1="292" y1="255" x2="270" y2="330" stroke="#3a66ee" stroke-width="1" opacity="0.3"/>
+        <!-- Lake Point Tower -->
+        <rect x="302" y="215" width="18" height="150" fill="#3a66ee" rx="4"/>
+        <!-- Navy Pier -->
+        <rect x="328" y="305" width="42" height="60" fill="#2855dd" rx="1"/>
+        <rect x="344" y="290" width="6" height="15" fill="#4a88ff"/>
+        <!-- Ferris wheel suggestion -->
+        <circle cx="338" cy="305" r="8" fill="none" stroke="#4a88ff" stroke-width="0.8" opacity="0.4"/>
+        <!-- Right side -->
+        <rect x="378" y="245" width="16" height="120" fill="#4a88ff" rx="1"/>
+        <rect x="398" y="265" width="20" height="100" fill="#3a66ee" rx="1"/>
+        <rect x="423" y="255" width="14" height="110" fill="#5a99ff" rx="1"/>
+        <!-- Marina City -->
+        <rect x="443" y="225" width="15" height="140" fill="#2855dd" rx="7"/>
+        <rect x="462" y="230" width="15" height="135" fill="#2855dd" rx="7"/>
+        <!-- Far right -->
+        <rect x="484" y="270" width="18" height="95" fill="#3a66ee" rx="1"/>
+        <rect x="506" y="285" width="14" height="80" fill="#4a88ff" rx="1"/>
+        <!-- Foreground -->
+        <rect x="20" y="325" width="30" height="40" fill="#1a3aff" rx="1" opacity="0.5"/>
+        <rect x="145" y="335" width="25" height="30" fill="#1a3aff" rx="1" opacity="0.4"/>
+        <!-- Window lights -->
+        <g opacity="0.45">
+          <rect x="100" y="168" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="107" y="182" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="100" y="205" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="110" y="235" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="100" y="268" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="141" y="200" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="148" y="225" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="141" y="260" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="168" y="210" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="217" y="185" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="224" y="215" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="217" y="248" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="224" y="280" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="247" y="182" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="250" y="208" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="247" y="240" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="275" y="148" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="284" y="170" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="276" y="198" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="285" y="228" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="276" y="260" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="285" y="295" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="307" y="235" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="383" y="262" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="403" y="285" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="428" y="275" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="448" y="255" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="467" y="265" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="489" y="290" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="192" y="192" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+          <rect x="168" y="240" width="2.5" height="2.5" fill="#fff" rx="0.5"/>
+        </g>
+        <!-- Reflections -->
+        <g opacity="0.08">
+          <rect x="78" y="370" width="52" height="85" fill="#4a88ff" rx="1"/>
+          <rect x="212" y="370" width="22" height="75" fill="#4a88ff" rx="1"/>
+          <rect x="268" y="370" width="26" height="95" fill="#3a66ee" rx="1"/>
+          <rect x="443" y="370" width="32" height="65" fill="#3a66ee" rx="1"/>
+          <rect x="188" y="370" width="16" height="68" fill="#3a66ee" rx="1"/>
+          <rect x="242" y="370" width="18" height="72" fill="#5a99ff" rx="1"/>
+          <rect x="378" y="370" width="16" height="55" fill="#4a88ff" rx="1"/>
+        </g>
+      </svg>
+    </div>
+    <div class="grid"></div>
+  </div>
+
+  <div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div><div class="particle"></div>
+
+  <div class="star star-1"><svg width="12" height="12" viewBox="0 0 12 12"><path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#fff"/></svg></div>
+  <div class="star star-2"><svg width="10" height="10" viewBox="0 0 12 12"><path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#fff"/></svg></div>
+  <div class="star star-3"><svg width="8" height="8" viewBox="0 0 12 12"><path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#5599ff"/></svg></div>
+  <div class="star star-4"><svg width="9" height="9" viewBox="0 0 12 12"><path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#fff"/></svg></div>
+  <div class="star star-5"><svg width="7" height="7" viewBox="0 0 12 12"><path d="M6 0L7.2 4.8L12 6L7.2 7.2L6 12L4.8 7.2L0 6L4.8 4.8Z" fill="#3366ff"/></svg></div>
+
+  <div class="items">
+    <!-- DESK -->
+    <div class="desk">
+      <div class="desk-surface"><div class="desk-legs"><div class="d-leg"></div><div class="d-leg"></div></div></div>
+      <div class="monitor">
+        <div class="monitor-frame">
+          <div class="chart-bars"><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div><div class="chart-bar"></div></div>
+          <div class="trend-line"><svg viewBox="0 0 134 42"><path class="trend-path" d="M0,38 Q16,30 28,26 T56,15 T84,20 T134,5"/></svg></div>
+        </div>
+        <div class="monitor-stand"></div><div class="monitor-base"></div>
+      </div>
+      <div class="metric-float metric-1"><svg width="18" height="18" viewBox="0 0 18 18" fill="none"><path d="M2 16L7 7L11 12L16 2" stroke="#5599ff" stroke-width="2" stroke-linecap="round"/></svg></div>
+      <div class="metric-float metric-2"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="6" width="3" height="8" rx="1" fill="#3366ff"/><rect x="6.5" y="3" width="3" height="11" rx="1" fill="#fff"/><rect x="11" y="1" width="3" height="13" rx="1" fill="#2255ee"/></svg></div>
+      <div class="metric-float metric-3"><svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6" stroke="#fff" stroke-width="1.5" fill="none" opacity="0.5"/><path d="M8 4V8L11 10" stroke="#fff" stroke-width="1.5" stroke-linecap="round" opacity="0.5"/></svg></div>
+    </div>
+
+    <!-- PHONE -->
+    <div class="phone-wrap">
+      <div class="phone-body"><div class="phone-notch"></div><div class="phone-screen"><div class="social-feed"><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div><div class="feed-item"></div></div></div></div>
+      <div class="notif notif-heart">♥</div><div class="notif notif-comment">💬</div><div class="notif notif-share">↗</div>
+      <div class="reaction">🔥</div><div class="reaction">💙</div><div class="reaction">✨</div>
+    </div>
+
+    <!-- TURNTABLE -->
+    <div class="turntable-wrap">
+      <div class="turntable-base">
+        <div class="vinyl"><div class="vinyl-label"><div class="vinyl-dot"></div></div></div>
+        <div class="tonearm"></div>
+        <div class="mixer"><div class="slider-track"><div class="slider-fill"></div></div><div class="slider-track"><div class="slider-fill"></div></div><div class="slider-track"><div class="slider-fill"></div></div><div class="slider-track"><div class="slider-fill"></div></div></div>
+      </div>
+      <div class="sound-waves"><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div><div class="wave-bar"></div></div>
+    </div>
+
+    <!-- AIRPODS MAX -->
+    <div class="airpods-max">
+      <div class="apm-headband"><div class="apm-headband-mesh"></div></div>
+      <div class="apm-frame-l"></div><div class="apm-frame-r"></div>
+      <div class="apm-cup apm-cup-l"></div><div class="apm-cup apm-cup-r"></div>
+      <div class="apm-crown"></div>
+    </div>
+
+    <!-- XBOX 360 CONTROLLER -->
+    <div class="xbox-wrap">
+      <div class="xbox-controller">
+        <div class="xbox-grip-l"></div><div class="xbox-grip-r"></div>
+        <div class="xbox-bumper-l"></div><div class="xbox-bumper-r"></div>
+        <div class="xbox-top-ridge"></div>
+        <div class="xbox-body">
+          <div class="xbox-stick-l"></div>
+          <div class="xbox-dpad"><div class="dpad-h"></div><div class="dpad-v"></div></div>
+          <div class="xbox-guide"></div>
+          <div class="xbox-small-btn xbox-back-btn"></div>
+          <div class="xbox-small-btn xbox-start-btn"></div>
+          <div class="xbox-btns"><div class="xbox-btn xbox-btn-a"></div><div class="xbox-btn xbox-btn-b"></div><div class="xbox-btn xbox-btn-x"></div><div class="xbox-btn xbox-btn-y"></div></div>
+          <div class="xbox-stick-r"></div>
+        </div>
+        <div class="xbox-bottom"></div>
+      </div>
+    </div>
+
+    <!-- VOMERO 18 RUNNING SHOES -->
+    <div class="running-pair">
+      <div class="run-shoe run-shoe-left">
+        <div class="vomero-upper">
+          <div class="vomero-collar"></div>
+          <div class="v-swoosh"><svg viewBox="0 0 48 18" fill="none"><path d="M2 14C6 14 11 12 16 9.5C21 7 29 3 46 2C38 5 27 11 18 12.5C12 13.5 6 13.5 2 14Z" fill="rgba(255,255,255,0.8)"/></svg></div>
+          <div class="vomero-tongue"></div>
+          <div class="v-laces"><div class="v-lace"></div><div class="v-lace"></div><div class="v-lace"></div><div class="v-lace"></div></div>
+        </div>
+        <div class="vomero-midsole"><div class="vomero-air"></div></div>
+        <div class="vomero-outsole"></div>
+      </div>
+      <div class="run-shoe run-shoe-right">
+        <div class="vomero-upper">
+          <div class="vomero-collar"></div>
+          <div class="v-swoosh"><svg viewBox="0 0 48 18" fill="none"><path d="M2 14C6 14 11 12 16 9.5C21 7 29 3 46 2C38 5 27 11 18 12.5C12 13.5 6 13.5 2 14Z" fill="rgba(255,255,255,0.8)"/></svg></div>
+          <div class="vomero-tongue"></div>
+          <div class="v-laces"><div class="v-lace"></div><div class="v-lace"></div><div class="v-lace"></div><div class="v-lace"></div></div>
+        </div>
+        <div class="vomero-midsole"><div class="vomero-air"></div></div>
+        <div class="vomero-outsole"></div>
+      </div>
+    </div>
+    <div class="speed-lines"><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div><div class="speed-line"></div></div>
+
+    <!-- GLOBE + TRAVEL -->
+    <div class="globe-wrap"><div class="globe-sphere"><div class="continent"></div><div class="continent"></div><div class="continent"></div><div class="continent"></div><div class="globe-line globe-line-h"></div><div class="globe-line globe-line-h"></div><div class="globe-line globe-line-v"></div><div class="globe-line globe-line-v"></div></div></div>
+    <div class="airplane"><div class="plane-body"><div class="plane-wing"></div><div class="plane-tail"></div><div class="plane-trail"></div></div></div>
+    <div class="passport"><div class="passport-body"><div class="passport-emblem"></div><div class="passport-lines"><span></span><span></span></div></div></div>
+
+    <!-- CELSIUS -->
+    <div class="celsius-wrap"><div class="can-body"><div class="can-top"></div><div class="can-logo"></div><div class="can-drop"></div><div class="can-drop"></div><div class="can-drop"></div></div></div>
+
+    <!-- DACHSHUND -->
+    <div class="dachshund-wrap">
+      <div class="dachshund">
+        <div class="dog-tail"></div>
+        <div class="dog-body"><div class="dog-leg dog-leg-bl"></div><div class="dog-leg dog-leg-br"></div><div class="dog-leg dog-leg-fl"></div><div class="dog-leg dog-leg-fr"></div></div>
+        <div class="dog-head"></div><div class="dog-snout"></div><div class="dog-nose"></div><div class="dog-eye"></div><div class="dog-eye-shine"></div><div class="dog-ear"></div>
+        <div class="dog-leash"><svg viewBox="0 0 50 30"><path class="leash-path" d="M0,4 Q20,-5 40,-20"/></svg></div>
+        <div class="leash-handle"></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,574 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Henry Mierzwa — Music</title>
+<link rel="icon" type="image/svg+xml" href="images/favicon.svg">
+<meta name="theme-color" content="#0047FF">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Syne:wght@400;500;600;700;800&family=Space+Grotesk:wght@400;500;600;700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300;1,400&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --blue: #1A6EFF; --blue-light: #4B91FF; --blue-dark: #0A4FCC;
+    --black: #0E0E0E; --dark: #1C1C1C; --gray: #6B6B6B;
+    --white: #FAFAFA; --border: #E2E2E0;
+    --gradient: linear-gradient(90deg, var(--blue-dark) 0%, var(--blue) 25%, var(--blue) 75%, var(--blue-light) 100%);
+    --side-pad: 250px;
+  }
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--white); color: var(--black); overflow-x: hidden; }
+
+  /* NAV */
+  nav { position: fixed; top: 0; left: 0; right: 0; z-index: 100; display: flex; justify-content: space-between; align-items: center; padding: 24px 60px; background: transparent; border-bottom: 1px solid transparent; transition: background 0.4s, border-color 0.3s, backdrop-filter 0.4s; }
+  nav.scrolled { background: rgba(250,250,250,0.92); backdrop-filter: blur(12px); border-color: var(--border); }
+  .nav-name { font-family: 'Syne', sans-serif; font-weight: 700; font-size: 17px; letter-spacing: -0.01em; color: white; text-decoration: none; transition: color 0.4s; }
+  nav.scrolled .nav-name { color: var(--black); }
+  .nav-links { display: flex; gap: 40px; list-style: none; }
+  .nav-links a { font-family: 'Syne', sans-serif; font-weight: 500; font-size: 14px; letter-spacing: 0.02em; color: rgba(255,255,255,0.6); text-decoration: none; transition: color 0.3s; position: relative; }
+  .nav-links a::after { content: ''; position: absolute; bottom: -2px; left: 0; width: 0; height: 1.5px; background: var(--blue); transition: width 0.25s ease; }
+  .nav-links a:hover { color: white; }
+  .nav-links a:hover::after, .nav-links a.active::after { width: 100%; }
+  .nav-links a.active { color: white; }
+  nav.scrolled .nav-links a { color: var(--gray); }
+  nav.scrolled .nav-links a:hover, nav.scrolled .nav-links a.active { color: var(--black); }
+
+  /* ===== HERO CAROUSEL ===== */
+  .hero-carousel { position: relative; width: 100%; height: 100vh; overflow: hidden; background: #060a18; }
+  .hero-slide { position: absolute; inset: 0; display: flex; align-items: center; justify-content: center; flex-direction: column; opacity: 0; transition: opacity 1.2s cubic-bezier(0.4,0,0.2,1); pointer-events: none; z-index: 1; }
+  .hero-slide.active { opacity: 1; pointer-events: auto; z-index: 2; }
+  .slide-bg { position: absolute; inset: 0; transition: transform 8s linear; transform: scale(1); }
+  .hero-slide.active .slide-bg { transform: scale(1.06); }
+  .slide-bg::after { content: ''; position: absolute; inset: 0; background: radial-gradient(ellipse at 30% 70%, rgba(0,0,0,0.1) 0%, transparent 60%), radial-gradient(ellipse at 70% 30%, rgba(255,255,255,0.04) 0%, transparent 50%); }
+  .hero-carousel::before { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; opacity: 0.035; background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E"); }
+  .hero-carousel::after { content: ''; position: absolute; inset: 0; z-index: 3; pointer-events: none; background: linear-gradient(180deg, rgba(0,0,0,0.35) 0%, rgba(0,0,0,0.1) 40%, rgba(0,0,0,0.15) 70%, rgba(0,0,0,0.55) 100%); }
+  .slide-content { position: relative; z-index: 4; text-align: center; display: flex; flex-direction: column; align-items: center; transform: translateY(10px); opacity: 0; transition: transform 0.8s cubic-bezier(0.23,1,0.32,1) 0.3s, opacity 0.8s ease 0.3s; }
+  .hero-slide.active .slide-content { transform: translateY(0); opacity: 1; }
+  .slide-eyebrow { font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.25em; text-transform: uppercase; color: rgba(255,255,255,0.45); margin-bottom: 16px; display: flex; align-items: center; gap: 10px; }
+  .slide-eyebrow::before, .slide-eyebrow::after { content: ''; width: 28px; height: 1px; background: rgba(255,255,255,0.2); }
+  .slide-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(50px, 10vw, 120px); letter-spacing: -0.05em; line-height: 0.95; color: white; text-shadow: 0 4px 40px rgba(0,0,0,0.3); margin-bottom: 20px; margin-top: 20px; padding-left: 100px; padding-right: 100px;}
+  .slide-artist { font-family: 'Space Grotesk', sans-serif; font-weight: 500; font-size: 16px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.4); margin-bottom: 36px; }
+  .slide-listen { display: inline-flex; align-items: center; gap: 10px; font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 700; letter-spacing: 0.12em; text-transform: uppercase; color: white; text-decoration: none; padding: 14px 32px; border-radius: 100px; background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.2); backdrop-filter: blur(12px); transition: all 0.3s; }
+  .slide-listen:hover { background: var(--blue); border-color: var(--blue); box-shadow: 0 4px 30px rgba(26,110,255,0.4); }
+
+  /* HUD */
+  .hero-hud { position: absolute; bottom: 0; left: 0; right: 0; z-index: 5; padding: 0 60px 40px; display: flex; justify-content: space-between; align-items: flex-end; }
+  .hud-counter { font-family: 'Syne', sans-serif; font-size: 12px; font-weight: 600; color: rgba(255,255,255,0.35); letter-spacing: 0.1em; }
+  .hud-counter .current-num { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: 28px; color: white; letter-spacing: -0.02em; display: block; line-height: 1; }
+  .hud-dots { display: flex; gap: 10px; align-items: center; position: absolute; left: 50%; bottom: 40px; transform: translateX(-50%); }
+  .hud-dot { width: 10px; height: 10px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.3); background: transparent; cursor: pointer; transition: all 0.35s; position: relative; }
+  .hud-dot.active { border-color: white; background: white; box-shadow: 0 0 12px rgba(255,255,255,0.4); }
+  .hud-dot.active::after { content: ''; position: absolute; inset: -4px; border-radius: 50%; border: 1.5px solid rgba(255,255,255,0.2); }
+  .hud-progress { width: 120px; }
+  .hud-progress-bar { width: 100%; height: 2px; background: rgba(255,255,255,0.1); border-radius: 1px; overflow: hidden; margin-bottom: 6px; }
+  .hud-progress-fill { height: 100%; background: white; border-radius: 1px; width: 0%; transition: width 0.1s linear; }
+  .hud-progress-label { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; color: rgba(255,255,255,0.3); letter-spacing: 0.12em; text-transform: uppercase; text-align: right; }
+  .hero-nav-btn { position: absolute; top: 50%; z-index: 5; width: 48px; height: 48px; border-radius: 50%; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.12); backdrop-filter: blur(8px); display: flex; align-items: center; justify-content: center; color: rgba(255,255,255,0.5); font-size: 18px; cursor: pointer; transition: all 0.25s; transform: translateY(-50%); }
+  .hero-nav-btn:hover { background: rgba(255,255,255,0.12); color: white; border-color: rgba(255,255,255,0.25); }
+  .hero-nav-prev { left: 28px; }
+  .hero-nav-next { right: 28px; }
+  .scroll-hint { position: absolute; bottom: 90px; left: 50%; transform: translateX(-50%); z-index: 5; display: flex; flex-direction: column; align-items: center; gap: 6px; opacity: 0; animation: scrollHintIn 1s 2s ease both; }
+  .scroll-hint span { font-family: 'Syne', sans-serif; font-size: 9px; font-weight: 600; letter-spacing: 0.2em; text-transform: uppercase; color: rgba(255,255,255,0.3); }
+  .scroll-hint-line { width: 1px; height: 28px; background: linear-gradient(180deg, rgba(255,255,255,0.3), transparent); animation: scrollBounce 2s ease-in-out infinite; }
+  @keyframes scrollHintIn { from { opacity: 0; transform: translateX(-50%) translateY(10px); } to { opacity: 1; transform: translateX(-50%) translateY(0); } }
+  @keyframes scrollBounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(6px); } }
+
+  /* ===== SHARED ===== */
+  .section-label { font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700; letter-spacing: 0.18em; text-transform: uppercase; color: var(--blue); margin-bottom: 16px; display: flex; align-items: center; gap: 12px; }
+  .section-label::after { content: ''; flex: 1; height: 1px; background: var(--border); }
+  .section-title { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(28px, 3.5vw, 36px); letter-spacing: -0.03em; color: var(--black); margin-bottom: 36px; }
+  .hero-link-btn { display: inline-flex; align-items: center; gap: 8px; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; padding: 12px 24px; border-radius: 100px; text-decoration: none; transition: all 0.2s; }
+  .hero-link-btn.primary { background: var(--blue); color: white; }
+  .hero-link-btn.primary:hover { background: var(--blue-dark); box-shadow: 0 4px 20px rgba(26,110,255,0.3); }
+  .hero-link-btn.secondary { border: 1.5px solid var(--border); color: var(--gray); background: white; }
+  .hero-link-btn.secondary:hover { border-color: var(--blue); color: var(--blue); }
+
+  /* ===== INTRO SECTION — big title + press photo ===== */
+  .intro-section {
+    padding: 100px 60px 100px;
+    padding-left: var(--side-pad); padding-right: var(--side-pad);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;
+  }
+  .intro-left { animation: fadeUp 0.8s ease both; }
+  .intro-eyebrow {
+    font-family: 'Syne', sans-serif; font-weight: 500; font-size: 12px;
+    letter-spacing: 0.15em; color: var(--gray); text-transform: uppercase; margin-bottom: 20px;
+  }
+  .intro-headline {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(48px, 6vw, 80px); line-height: 1.0;
+    letter-spacing: -0.04em; color: var(--black); margin-bottom: 28px;
+  }
+  .intro-headline .accent {
+    background: var(--gradient); -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent; background-clip: text;
+  }
+  .intro-body {
+    font-size: 16px; line-height: 1.75; color: var(--gray); max-width: 480px; margin-bottom: 32px;
+  }
+  .intro-links { display: flex; gap: 12px; flex-wrap: wrap; }
+  .intro-right { animation: fadeUp 0.8s 0.2s ease both; }
+  .press-photo {
+    width: 100%; aspect-ratio: 3/4; border-radius: 20px; overflow: hidden;
+    background: linear-gradient(135deg, #0d1a3a 0%, #1A6EFF 50%, #4B91FF 100%);
+    display: flex; align-items: center; justify-content: center; position: relative;
+  }
+  .press-photo-label { font-family: 'Syne', sans-serif; font-weight: 800; font-size: 14px; letter-spacing: 0.15em; text-transform: uppercase; color: rgba(255,255,255,0.2); }
+  .press-photo img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; border-radius: 20px; }
+
+  /* ===== ABOUT SECTION ===== */
+  .about-section {
+    padding: 100px 60px; padding-left: var(--side-pad); padding-right: var(--side-pad);
+  }
+  .about-content { max-width: 680px; }
+  .about-title {
+    font-family: 'Space Grotesk', sans-serif; font-weight: 700;
+    font-size: clamp(28px, 3.5vw, 36px); letter-spacing: -0.03em; line-height: 1.15;
+    color: var(--black); margin-bottom: 24px;
+  }
+  .about-text { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 20px; }
+  .about-links { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 28px; }
+  .bio-link { display: inline-flex; align-items: center; gap: 6px; font-family: 'Syne', sans-serif; font-size: 11px; font-weight: 700; letter-spacing: 0.08em; text-transform: uppercase; padding: 10px 20px; border-radius: 100px; border: 1.5px solid var(--border); color: var(--gray); text-decoration: none; transition: all 0.2s; }
+  .bio-link:hover { border-color: var(--blue); color: var(--blue); }
+
+    /* Portrait placeholder */
+  .about-portrait-wrap { animation: fadeUp 0.8s 0.2s ease both; display: flex; justify-content: center; }
+  .about-portrait {
+    width: 360px; height: 440px; border-radius: 24px;
+    background: linear-gradient(160deg, #0A1628 0%, #0D2052 40%, #1A4FCC 70%, #3B7FFF 100%);
+    position: relative; overflow: hidden;
+    box-shadow: 0 32px 64px rgba(26,110,255,0.18), 0 0 0 1px rgba(26,110,255,0.1);
+  }
+  .about-portrait-grid {
+    position: absolute; inset: 0;
+    background-image: linear-gradient(rgba(255,255,255,0.04) 1px, transparent 1px), linear-gradient(90deg, rgba(255,255,255,0.04) 1px, transparent 1px);
+    background-size: 36px 36px;
+  }
+  .about-portrait-glow {
+    position: absolute; width: 200px; height: 200px; border-radius: 50%;
+    background: radial-gradient(circle, rgba(75,145,255,0.4) 0%, transparent 70%);
+    top: 30%; left: 50%; transform: translate(-50%, -50%);
+    animation: pulse 3s ease-in-out infinite;
+  }
+
+  .about-bookings {
+    padding: 50px 60px; padding-left: var(--side-pad); padding-right: var(--side-pad);
+    display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: start;
+  }
+
+  /* ===== BOOKINGS SECTION ===== */
+  .bookings-section {
+    padding: 100px 60px; padding-left: var(--side-pad); padding-right: var(--side-pad);
+  }
+  .bookings-content { max-width: 580px; }
+  .bookings-title {
+    font-family: 'Syne', sans-serif; font-weight: 800;
+    font-size: clamp(28px, 3.5vw, 40px); letter-spacing: -0.03em; line-height: 1.1;
+    color: var(--black); margin-bottom: 16px;
+  }
+  .bookings-body { font-size: 16px; line-height: 1.8; color: #444; margin-bottom: 28px; }
+  .bookings-body a { color: var(--blue); font-weight: 500; text-decoration: none; }
+  .bookings-body a:hover { text-decoration: underline; }
+  .bookings-btns { display: flex; gap: 12px; flex-wrap: wrap; }
+
+  /* ===== KEY PERFORMANCES ===== */
+  .shows-section { padding: 50px 60px; padding-left: var(--side-pad); padding-right: var(--side-pad); overflow: hidden; }
+  .shows-header { margin-bottom: 40px; }
+  .marquee { overflow: hidden; white-space: nowrap; border-top: 1px solid var(--border); border-bottom: 1px solid var(--border); padding: 16px 0; margin-bottom: 56px; }
+  .marquee-content { display: inline-flex; gap: 48px; animation: marqueeScroll 25s linear infinite; }
+  .marquee-item { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 700; color: rgba(14,14,14,0.12); letter-spacing: 0.06em; text-transform: uppercase; display: flex; align-items: center; gap: 14px; }
+  .marquee-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--blue); opacity: 0.4; }
+  @keyframes marqueeScroll { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+  /* 5-across square cards */
+  .shows-grid {
+    display: grid; grid-template-columns: repeat(4, 1fr); gap: 20px;
+  }
+  .show-card-wrap { cursor: default; }
+  .show-card-img {
+    width: 100%; aspect-ratio: 1; border-radius: 16px; overflow: hidden;
+    position: relative;
+    background: linear-gradient(135deg, #0d1a3a, #1A6EFF);
+  }
+  .show-card-img img {
+    width: 100%; height: 100%; object-fit: cover; display: block;
+  }
+  .show-card-placeholder {
+    width: 100%; height: 100%;
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'Syne', sans-serif; font-size: 8px; font-weight: 600;
+    letter-spacing: 0.1em; text-transform: uppercase; color: rgba(255,255,255,0.25);
+  }
+  /* Hover overlay */
+  .show-card-overlay {
+    position: absolute; inset: 0; border-radius: 16px;
+    background: rgba(10, 15, 40, 0.85);
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center; padding: 16px;
+    opacity: 0; transition: opacity 0.3s;
+  }
+  .show-card-wrap:hover .show-card-overlay { opacity: 1; }
+  .show-card-date {
+    font-family: 'Syne', sans-serif; font-size: 10px; font-weight: 700;
+    letter-spacing: 0.12em; text-transform: uppercase;
+    color: var(--blue-light); margin-bottom: 8px;
+  }
+  .show-card-venue {
+    font-family: 'Space Grotesk', sans-serif; font-size: 14px; font-weight: 700;
+    color: white; line-height: 1.2; margin-bottom: 8px;
+  }
+  .show-card-desc {
+    font-family: 'DM Sans', sans-serif; font-size: 11px;
+    color: rgba(255,255,255,0.5); line-height: 1.5;
+  }
+
+  /* FOOTER */
+  footer { background: var(--dark); padding: 64px 60px 48px; padding-left: var(--side-pad); padding-right: var(--side-pad); }
+  .footer-top { display: flex; justify-content: space-between; align-items: flex-start; margin-bottom: 48px; }
+  .footer-headline { font-family: 'Space Grotesk', sans-serif; font-weight: 700; font-size: clamp(22px, 3vw, 36px); letter-spacing: -0.03em; margin-bottom: 24px; background: var(--gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text; }
+  .footer-info { font-size: 14px; line-height: 2; color: #777; }
+  .footer-links { display: flex; gap: 48px; padding-top: 8px; }
+  .footer-links a { font-family: 'Syne', sans-serif; font-size: 14px; font-weight: 500; color: #777; text-decoration: none; transition: color 0.2s; }
+  .footer-links a:hover { color: white; }
+
+  @keyframes fadeUp { from { opacity: 0; transform: translateY(30px); } to { opacity: 1; transform: translateY(0); } }
+  .fade-in { opacity: 0; transform: translateY(24px); transition: opacity 0.7s ease, transform 0.7s ease; }
+  .fade-in.visible { opacity: 1; transform: translateY(0); }
+
+  @media (max-width: 1200px) { :root { --side-pad: 60px; } }
+  @media (max-width: 960px) {
+    :root { --side-pad: 24px; }
+    nav { padding: 20px 24px; }
+    .nav-links { gap: 24px; }
+    .intro-section { grid-template-columns: 1fr; gap: 40px; }
+    .intro-right { order: -1; }
+    .press-photo { aspect-ratio: 16/9; }
+    .shows-grid { grid-template-columns: repeat(3, 1fr); }
+    .footer-top { flex-direction: column; gap: 32px; }
+    .hero-nav-btn { display: none; }
+    .hero-hud { padding: 0 24px 32px; }
+    .slide-title { font-size: clamp(40px, 12vw, 80px); }
+    .about-bookings { grid-template-columns: 1fr; gap: 48px; }
+  }
+  @media (max-width: 600px) {
+    .shows-grid { grid-template-columns: repeat(2, 1fr); }
+    .intro-headline { font-size: clamp(36px, 10vw, 56px); }
+  }
+</style>
+</head>
+<body>
+
+<!-- CUSTOM CURSOR -->
+<style>
+  *, *::before, *::after { cursor: none !important; }
+  .cursor-dot { position: fixed; top: 0; left: 0; width: 8px; height: 8px; background: #0A4FCC; border-radius: 50%; pointer-events: none; z-index: 99999; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, background 0.3s; }
+  .cursor-ring { position: fixed; top: 0; left: 0; width: 36px; height: 36px; border: 2px solid #0a4ecc; background: rgba(43,78,255,0.10); border-radius: 50%; pointer-events: none; z-index: 99998; transform: translate(-50%, -50%); transition: width 0.3s, height 0.3s, border-color 0.3s, background 0.3s; }
+  .cursor-dot.is-hover { width: 12px; height: 12px; background: #2b4eff; }
+  .cursor-ring.is-hover { width: 56px; height: 56px; border-color: #2b4eff; }
+  .cursor-dot.is-click { width: 6px; height: 6px; }
+  .cursor-ring.is-click { width: 30px; height: 30px; }
+  @media (hover: none) and (pointer: coarse) { .cursor-dot, .cursor-ring { display: none !important; } *, *::before, *::after { cursor: auto !important; } }
+</style>
+<div class="cursor-dot"></div><div class="cursor-ring"></div>
+<script>
+(function(){const d=document.querySelector('.cursor-dot'),r=document.querySelector('.cursor-ring');if(!d||!r)return;let mx=-100,my=-100,rx=-100,ry=-100;const e=.15;document.addEventListener('mousemove',v=>{mx=v.clientX;my=v.clientY;d.style.left=mx+'px';d.style.top=my+'px'});function a(){rx+=(mx-rx)*e;ry+=(my-ry)*e;r.style.left=rx+'px';r.style.top=ry+'px';requestAnimationFrame(a)}a();const h='a,button,[role="button"],.hoverable,.hud-dot,.hero-nav-btn,.slide-listen,.show-card-wrap';document.addEventListener('mouseover',v=>{if(v.target.closest(h)){d.classList.add('is-hover');r.classList.add('is-hover')}});document.addEventListener('mouseout',v=>{if(v.target.closest(h)){d.classList.remove('is-hover');r.classList.remove('is-hover')}});document.addEventListener('mousedown',()=>{d.classList.add('is-click');r.classList.add('is-click')});document.addEventListener('mouseup',()=>{d.classList.remove('is-click');r.classList.remove('is-click')});document.addEventListener('mouseleave',()=>{d.style.opacity='0';r.style.opacity='0'});document.addEventListener('mouseenter',()=>{d.style.opacity='1';r.style.opacity='1'})})();
+</script>
+
+<nav id="navbar">
+  <a href="index.html" class="nav-name">Henry Mierzwa</a>
+  <ul class="nav-links">
+    <li><a href="index.html">Work</a></li>
+    <li><a href="music.html" class="active">Music</a></li>
+    <li><a href="about.html">About</a></li>
+    <li><a href="#" onclick="openResumeModal(event)">Resume</a></li>
+  </ul>
+</nav>
+
+<!-- ===== HERO CAROUSEL ===== -->
+<section class="hero-carousel" id="heroCarousel">
+  <div class="hero-nav-btn hero-nav-prev" onclick="heroGoPrev()">&#8249;</div>
+  <div class="hero-nav-btn hero-nav-next" onclick="heroGoNext()">&#8250;</div>
+  <div class="hero-hud">
+    <div class="hud-counter"><span class="current-num" id="hudNum">01</span><span id="hudTotal">/ 08</span></div>
+    <div class="hud-dots" id="hudDots"></div>
+    <div class="hud-progress"><div class="hud-progress-bar"><div class="hud-progress-fill" id="hudProgressFill"></div></div><div class="hud-progress-label">Auto-playing</div></div>
+  </div>
+  <div class="scroll-hint"><span>Scroll</span><div class="scroll-hint-line"></div></div>
+</section>
+
+<!-- ===== INTRO — Big title + press photo ===== -->
+<section class="intro-section">
+  <div class="intro-left">
+    <p class="intro-eyebrow">Electronic Production / DJ Trio</p>
+    <h1 class="intro-headline">Galena <span class="accent">Crew</span></h1>
+    <p class="intro-body">Based out of Chicago, IL &mdash; Galena Crew is comprised of childhood best friends Henry, Maksym &amp; Tuzzy. After nearly 8 years, Galena Crew has gone from a niche hobby to a forceful movement.</p>
+    <div class="intro-links">
+      <a href="https://instagram.com/galenacrew" target="_blank" class="hero-link-btn primary">Instagram &#8599;</a>
+      <a href="https://soundcloud.com/galenacrew" target="_blank" class="hero-link-btn secondary">SoundCloud &#8599;</a>
+      <a href="https://open.spotify.com/artist/2POzROdDgoy8DpRamLMlbR?si=2Lh4LKumSaa4hppleQC1Yw" target="_blank" class="hero-link-btn secondary">Spotify &#8599;</a>
+    </div>
+  </div>
+  <div class="about-portrait-wrap">
+    <div class="about-portrait">
+    <img src="images/pressphoto.jpg" alt="Henry Mierzwa headshot" draggable="false" 
+    style="position:absolute; inset:0; width:100%; height:100%; object-fit:cover; display:block;">
+    </div>
+  </div>
+</section>
+
+<!-- ===== ABOUT + BOOKINGS SIDE BY SIDE ===== -->
+<section class="about-bookings fade-in">
+  <div>
+    <p class="section-label">About</p>
+    <h2 class="about-title">Music through the lens of 3 childhood best friends</h2>
+    <p class="about-text">
+      Being part of &ldquo;the Crew&rdquo; is more than just inclusion, it's about sharing the energy and happiness we have on stage and in the studio. 
+    </p>
+    <p class="about-text">
+      We began making music together in college with nothing but a laptop and a dream. Nearly a 8 years later, we've played some of the biggest festivals across the US and shared stages with artists like The Chainsmokers, Dillon Francis, and Two Friends.
+    </p>
+  </div>
+  <div>
+    <p class="section-label">Contact</p>
+    <h2 class="about-title">For bookings &amp; press</h2>
+    <p class="bookings-body"><a href="mailto:galenacrewmusic@gmail.com"><strong>galenacrewmusic@gmail.com</strong></a>
+    <br>Feel free to reach out for performance inquiries and collaborations.</p>
+    <div class="bookings-btns">
+      <a href="mailto:galenacrewmusic@gmail.com" class="hero-link-btn primary">Book Now &rarr;</a>
+      <a href="https://www.dropbox.com/scl/fi/cu6b84ucxknq93e2dsrga/Galena-Crew-EPK-2026.pdf?rlkey=id73u9rxiemkrxnd5cmfdhgqw&st=wfv6le2x&dl=0" target="_blank" class="hero-link-btn secondary">EPK &#8599;</a>
+    </div>
+  </div>
+</section>
+
+<!-- ===== KEY PERFORMANCES ===== -->
+<section class="shows-section fade-in" id="shows">
+  <div class="shows-header">
+    <p class="section-label">Key Performances</p>
+    <h2 class="section-title">On stages that matter</h2>
+  </div>
+  <div class="marquee"><div class="marquee-content">
+    <span class="marquee-item"><span class="marquee-dot"></span>Beyond Wonderland Music Festival</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>North Coast Music Festival</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Navy Pier</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Academy LA</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Radius Chicago</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Volleywood Music Festival</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Salt Shed</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Concord Music Hall</span>
+    <span class="marquee-item"><span class="marquee-dot"></span>Ramova Theatre</span>
+  </div></div>
+
+  <div class="shows-grid">
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Eliminate.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Oct 2025</span>
+          <span class="show-card-venue">Concord Music Hall</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ Eliminate</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Said The Sky.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Sep 2025</span>
+          <span class="show-card-venue">Academy LA</span>
+          <span class="show-card-desc">Los Angeles, CA &middot; w/ Said The Sky</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Chainsmokers.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Aug 2025</span>
+          <span class="show-card-venue">Navy Pier</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ The Chainsmokers</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Dillon Francis.JPG" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Jun 2025</span>
+          <span class="show-card-venue">Ramova Theatre</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ Dillon Francis</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Two Friends.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Sep 2024</span>
+          <span class="show-card-venue">House of Blues</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ Two Friends</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC DFxVK.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Aug 2024</span>
+          <span class="show-card-venue">Radius Chicago</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ Dillon Francis & Valentino Khan</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC Volleywood.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Jul 2024</span>
+          <span class="show-card-venue">Volleywood Music Festival</span>
+          <span class="show-card-desc">North Ave Beach, IL</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC BW Afters.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Jun 2024</span>
+          <span class="show-card-venue">Radius Chicago</span>
+          <span class="show-card-desc">Chicago, IL &middot; w/ Kaskade</span>
+        </div>
+      </div>
+    </div>
+    <div class="show-card-wrap">
+      <div class="show-card-img">
+        <div class="show-card-placeholder"><img src="images/GC BW.jpg" draggable="false"></div>
+        <div class="show-card-overlay">
+          <span class="show-card-date">Jun 2024</span>
+          <span class="show-card-venue">Beyond Wonderland Music Festival</span>
+          <span class="show-card-desc">Chicago, IL</span>
+        </div>
+      </div>
+    </div>
+</section>
+
+<footer>
+  <p class="footer-headline">Thanks for stopping by</p>
+  <div class="footer-top">
+    <div>
+      <div class="footer-info">
+        <p>byhenrym@gmail.com</p>
+        <p>Designed, vibed, and coded by yours truly</p>
+        <p>© 2026 Henry Mierzwa</p>
+      </div>
+    </div>
+    <div class="footer-links">
+      <a href="mailto:byhenrym@gmail.com">Email</a>
+      <a href="https://linkedin.com/in/henmierz" target="_blank">LinkedIn</a>
+    </div>
+  </div>
+</footer>
+
+<!-- RESUME MODAL -->
+<style>
+  .resume-overlay{position:fixed;inset:0;z-index:9999;display:flex;align-items:center;justify-content:center;background:rgba(14,14,14,0.45);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px);opacity:0;visibility:hidden;transition:opacity .35s,visibility .35s}
+  .resume-overlay.is-open{opacity:1;visibility:visible}
+  .resume-modal{position:relative;background:var(--white);border:1px solid var(--blue);border-radius:16px;padding:48px 44px 40px;max-width:440px;width:90%;text-align:center;box-shadow:0 0 24px rgba(26,110,255,0.25),0 0 60px rgba(26,110,255,0.08);transform:scale(.92) translateY(16px);opacity:0;transition:transform .4s cubic-bezier(.19,1,.22,1),opacity .35s}
+  .resume-overlay.is-open .resume-modal{transform:scale(1) translateY(0);opacity:1}
+  .resume-modal-close{position:absolute;top:16px;right:18px;background:none;border:none;font-size:22px;line-height:1;color:var(--gray);cursor:pointer;transition:color .2s;font-family:'DM Sans',sans-serif}
+  .resume-modal-close:hover{color:var(--black)}
+  .resume-modal h2{font-family:'Space Grotesk',sans-serif;font-weight:700;font-size:26px;letter-spacing:-.03em;color:var(--black);margin-bottom:14px}
+  .resume-modal p{font-family:'DM Sans',sans-serif;font-size:15px;line-height:1.7;color:var(--gray);margin-bottom:32px}
+  .resume-modal-btn{display:inline-flex;align-items:center;gap:8px;font-family:'Syne',sans-serif;font-weight:700;font-size:13px;letter-spacing:.08em;text-transform:uppercase;color:#fff;background:var(--blue);border:none;border-radius:100px;padding:14px 32px;text-decoration:none;transition:background .25s,box-shadow .25s;cursor:pointer}
+  .resume-modal-btn:hover{background:var(--blue-dark);box-shadow:0 4px 20px rgba(26,110,255,0.35)}
+</style>
+<div class="resume-overlay" id="resumeOverlay"><div class="resume-modal"><button class="resume-modal-close" onclick="closeResumeModal()" aria-label="Close">&times;</button><h2>Resume</h2><p>To respect confidentiality, my resume is shared on a personal basis. Feel free to reach out and I&rsquo;ll be happy to send it your way!</p><a class="resume-modal-btn" href="mailto:henmierz@gmail.com?subject=Resume%20Request">Contact Me &rarr;</a></div></div>
+
+<script>
+function openResumeModal(e){if(e)e.preventDefault();document.getElementById('resumeOverlay').classList.add('is-open');document.body.style.overflow='hidden'}
+function closeResumeModal(){document.getElementById('resumeOverlay').classList.remove('is-open');document.body.style.overflow=''}
+document.getElementById('resumeOverlay').addEventListener('click',function(e){if(e.target===this)closeResumeModal()});
+document.addEventListener('keydown',function(e){if(e.key==='Escape')closeResumeModal()});
+
+const navEl=document.getElementById('navbar'),heroSection=document.getElementById('heroCarousel');
+function updateNav(){const b=heroSection.getBoundingClientRect().bottom;navEl.classList.toggle('scrolled',b<=80)}
+window.addEventListener('scroll',updateNav);updateNav();
+
+const observer=new IntersectionObserver(entries=>{entries.forEach(e=>{if(e.isIntersecting){e.target.classList.add('visible');observer.unobserve(e.target)}})},{threshold:0.15});
+document.querySelectorAll('.fade-in').forEach(el=>observer.observe(el));
+
+/* ===== HERO CAROUSEL ===== */
+const songs=[
+  {title:"WANT it",
+  sub:"Galena Crew \u00b7 Single \u00b7 2025",
+  url:"https://soundcloud.com/discoveryproject/galena-crew-want-it",
+  bg:"linear-gradient(135deg, #060d24 0%, #0d1e4a 25%, #1A6EFF 60%, #4B91FF 100%)"},
+
+  {title:"Nightfall",
+  sub:"Galena Crew \u00b7 Single \u00b7 2025",
+  url:"https://soundcloud.com/itslostindreams/galena-crew-nightfall",
+  bg:"linear-gradient(135deg, #0a0520 0%, #1a0d40 25%, #5535CC 60%, #8B6BFF 100%)"},
+
+  {title:"Better Off",
+  sub:"Galena Crew feat. Selena Brills \u00b7 Single \u00b7 2025",
+  url:"https://soundcloud.com/galenacrew/betteroff",
+  bg:"linear-gradient(135deg, #040d08 0%, #0a2010 25%, #1B8C4A 60%, #2ECC71 100%)"},
+
+  {title:"Live Your Life (Galena Crew Remix)",
+  sub:"T.I. & Rihanna \u00b7 Remix \u00b7 2026",
+  url:"https://soundcloud.com/galenacrew/liveyourliferemix",
+  bg:"linear-gradient(135deg, #1a0505 0%, #3a0a0a 25%, #CC2B2B 60%, #FF6B4B 100%)"},
+
+  {title:"Forever (Galena Crew Remix)",
+  sub:"Chris Brown \u00b7 Remix \u00b7 2025",
+  url:"https://soundcloud.com/galenacrew/foreverremix",
+  bg:"linear-gradient(135deg, #150518 0%, #2a0a30 25%, #AA2580 60%, #FF4BA0 100%)"},
+
+  {title:"Insomniac Projections Radio",
+  sub:"Galena Crew \u00b7 Mix \u00b7 2024",
+  url:"https://soundcloud.com/galenacrew/projectionsradiomix",
+  bg:"linear-gradient(135deg, #1a1205 0%, #332008 25%, #CC8800 60%, #FFB84B 100%)"},
+];
+let heroIndex=0,progressTimer=null,progressElapsed=0;
+const SLIDE_DURATION=5000,PROGRESS_INTERVAL=30;
+const carouselEl=document.getElementById('heroCarousel');
+const hudDotsEl=document.getElementById('hudDots');
+const hudNumEl=document.getElementById('hudNum');
+const hudTotalEl=document.getElementById('hudTotal');
+const hudFillEl=document.getElementById('hudProgressFill');
+
+function buildHero(){
+  const navPrev=carouselEl.querySelector('.hero-nav-prev');
+  songs.forEach((s,i)=>{
+    const slide=document.createElement('div');
+    slide.className='hero-slide'+(i===0?' active':'');
+    slide.innerHTML='<div class="slide-bg" style="background:'+s.bg+';"></div><div class="slide-content"><div class="slide-eyebrow">Galena Crew</div><h1 class="slide-title">'+s.title+'</h1><p class="slide-artist">'+s.sub+'</p><a href="'+s.url+'" target="_blank" class="slide-listen">Listen Now \u2197</a></div>';
+    carouselEl.insertBefore(slide,navPrev);
+  });
+  hudDotsEl.innerHTML=songs.map((_,i)=>'<div class="hud-dot'+(i===0?' active':'')+'" onclick="heroGoTo('+i+')"></div>').join('');
+  hudTotalEl.textContent='/ '+String(songs.length).padStart(2,'0');
+}
+function heroGoTo(i){
+  if(i===heroIndex)return;
+  const slides=carouselEl.querySelectorAll('.hero-slide'),dots=hudDotsEl.querySelectorAll('.hud-dot');
+  slides[heroIndex].classList.remove('active');dots[heroIndex].classList.remove('active');
+  heroIndex=i;
+  slides[heroIndex].classList.add('active');dots[heroIndex].classList.add('active');
+  hudNumEl.textContent=String(heroIndex+1).padStart(2,'0');resetProgress();
+}
+function heroGoNext(){heroGoTo((heroIndex+1)%songs.length)}
+function heroGoPrev(){heroGoTo((heroIndex-1+songs.length)%songs.length)}
+function resetProgress(){
+  progressElapsed=0;hudFillEl.style.width='0%';clearInterval(progressTimer);
+  progressTimer=setInterval(()=>{progressElapsed+=PROGRESS_INTERVAL;hudFillEl.style.width=(progressElapsed/SLIDE_DURATION*100)+'%';if(progressElapsed>=SLIDE_DURATION)heroGoNext()},PROGRESS_INTERVAL);
+}
+carouselEl.addEventListener('mouseenter',()=>clearInterval(progressTimer));
+carouselEl.addEventListener('mouseleave',()=>resetProgress());
+document.addEventListener('keydown',function(e){const rect=heroSection.getBoundingClientRect();if(rect.bottom<=0)return;if(e.key==='ArrowRight'){heroGoNext();e.preventDefault()}if(e.key==='ArrowLeft'){heroGoPrev();e.preventDefault()}});
+buildHero();resetProgress();
+</script>
+</body>
+</html>
